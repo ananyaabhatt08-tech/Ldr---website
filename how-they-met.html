@@ -1,0 +1,481 @@
+<title>How They Met</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Young+Serif&display=swap" rel="stylesheet">
+<style>
+/* Layout: one 9:16 stage (reel-ready) centred on a dark page, personalise fields and replay underneath.
+   Five scenes cross-fade on a JS timeline; each scene's own CSS animations start when it gets .on. */
+:root{
+  --night:#24123b; --plum:#4a2358; --dusk:#8a4570; --rose:#f08a9b; --blush:#ffe1da;
+  --gold:#ffc247; --teal:#2f8189; --ink:#1a0e2b; --paper:#fff3ee; --peri:#6b5bc4;
+  --display:'Young Serif',Georgia,serif; --body:'Figtree',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  background:var(--ink); color:var(--blush); font-family:var(--body); font-size:15px; line-height:1.45;
+  padding-block:20px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+}
+.stage{
+  position:relative; flex:none;
+  width:min(100%, 360px, calc((100dvh - 230px) * 9 / 16));
+  min-width:200px;
+  aspect-ratio:9/16; container-type:inline-size; overflow:hidden;
+  border-radius:20px; background:var(--night);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.stage.reset, .stage.reset *{transition:none!important}
+.scene{position:absolute; inset:0; opacity:0; transition:opacity .7s ease; overflow:hidden}
+.scene.on{opacity:1}
+.scene>svg{position:absolute; inset:0; width:100%; height:100%}
+
+.cap{
+  position:absolute; left:0; right:0; padding:0 7cqw; text-align:center; opacity:0;
+  font-family:var(--display); color:#fff; font-size:8.2cqw; line-height:1.15; text-wrap:balance;
+  text-shadow:0 2px 14px rgba(26,14,43,.55);
+}
+.cap.small{font-family:var(--body); font-weight:600; font-size:3.6cqw; letter-spacing:.18em; text-transform:uppercase; color:var(--blush)}
+.cap.gold{color:var(--gold)}
+.on .cap{animation:fadeUp .9s ease-out var(--d,0s) both}
+@keyframes fadeUp{from{opacity:0; transform:translateY(3cqw)} to{opacity:1; transform:none}}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+
+/* ---- people ---- */
+.leg{stroke:var(--ink); stroke-width:8; stroke-linecap:round; transform-box:fill-box; transform-origin:50% 0}
+.umbtilt{transform-origin:0 0}
+
+/* ---- scene A: street ---- */
+.rainfall{animation:rainfall var(--s,.7s) linear infinite}
+@keyframes rainfall{to{transform:translateY(var(--p,120px))}}
+#sA.on .walk{animation:walkIn 4.4s cubic-bezier(.25,.7,.3,1) .3s both}
+@keyframes walkIn{from{transform:translateX(0)} to{transform:translateX(88px)}}
+#sA.on .bob{animation:bob .24s ease-in-out .3s 18 alternate}
+@keyframes bob{to{transform:translateY(-3px)}}
+#sA.on .l1,#sA.on .stepB .l2{animation:swingA .48s ease-in-out .3s 9 alternate}
+#sA.on .l2,#sA.on .stepB .l1{animation:swingB .48s ease-in-out .3s 9 alternate}
+@keyframes swingA{from{transform:rotate(-16deg)} to{transform:rotate(16deg)}}
+@keyframes swingB{from{transform:rotate(16deg)} to{transform:rotate(-16deg)}}
+.lamp{animation:flick 3s ease-in-out infinite alternate}
+@keyframes flick{from{opacity:.75} to{opacity:1}}
+
+/* ---- scene B: the meeting ---- */
+#sB.on .sheWalk{animation:sheStep 1.3s ease-in-out 3s both}
+@keyframes sheStep{from{transform:translateX(0)} to{transform:translateX(40px)}}
+#sB.on .sheUmb{animation:fold .5s ease-in 3s both}
+@keyframes fold{to{opacity:0}}
+#sB.on .umbL .umbtilt{animation:bumpR 1.2s ease-in-out .25s both}
+#sB.on .umbR .umbtilt{animation:bumpR 1.2s ease-in-out .25s both}
+@keyframes bumpR{0%{transform:rotate(0)} 40%{transform:rotate(11deg)} 70%{transform:rotate(-3deg)} 100%{transform:rotate(0)}}
+#sB.on .book{animation:bookMove 4s ease-in-out .5s both}
+@keyframes bookMove{
+  0%{transform:translate(0,0) rotate(0)}
+  18%{transform:translate(-12px,138px) rotate(-70deg)}
+  23%{transform:translate(-12px,128px) rotate(-78deg)}
+  28%{transform:translate(-12px,138px) rotate(-70deg)}
+  50%{transform:translate(-12px,138px) rotate(-70deg)}
+  100%{transform:translate(42px,58px) rotate(8deg)}
+}
+.heart{opacity:0}
+#sB.on .heart{animation:floatUp 2.4s ease-out var(--d) both}
+@keyframes floatUp{0%{opacity:0; transform:translate(0,0) scale(.5)} 20%{opacity:1} 100%{opacity:0; transform:translate(var(--dx),-170px) scale(1.1)}}
+.bokeh{animation:flick 2.4s ease-in-out infinite alternate}
+
+/* ---- scene C: the cafe ---- */
+.steam{fill:none; stroke:#fff; stroke-width:3; stroke-linecap:round; stroke-dasharray:40 30; opacity:.55; animation:steam 2.2s linear infinite}
+@keyframes steam{to{stroke-dashoffset:-70}}
+.bulb{animation:twinkle 1.6s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.35} to{opacity:1}}
+#sC.on .minute{animation:spin 4.2s cubic-bezier(.5,0,.4,1) .8s both}
+#sC.on .hour{animation:spinH 4.2s cubic-bezier(.5,0,.4,1) .8s both}
+.minute,.hour{transform-origin:0 0}
+@keyframes spin{to{transform:rotate(1800deg)}}
+@keyframes spinH{to{transform:rotate(150deg)}}
+
+/* ---- scene D: milestones ---- */
+#sD{background:var(--blush); color:var(--ink)}
+#sD .cap{color:var(--ink); text-shadow:none; top:12cqw}
+.ms{position:absolute; left:11cqw; right:8cqw; top:42cqw; display:flex; flex-direction:column; gap:15cqw}
+.ms::before{
+  content:""; position:absolute; left:8cqw; top:8cqw; bottom:8cqw; width:.9cqw; margin-left:-.45cqw;
+  background:var(--dusk); transform-origin:top; transform:scaleY(0); border-radius:1cqw;
+}
+#sD.on .ms::before{animation:grow 4s ease-in-out .5s both}
+@keyframes grow{to{transform:scaleY(1)}}
+.m{display:flex; align-items:center; gap:5cqw; position:relative; opacity:0}
+#sD.on .m{animation:fadeUp .8s ease-out var(--d) both}
+.m .ic{flex:none; width:16cqw; height:16cqw; border-radius:50%; background:var(--night); display:grid; place-items:center}
+.m .ic svg{width:8.5cqw; height:8.5cqw; fill:none; stroke:var(--gold); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+.m b{display:block; font-family:var(--display); font-weight:400; font-size:7.6cqw; line-height:1; color:var(--dusk)}
+.m span{display:block; font-size:4.6cqw; font-weight:600; margin-top:1.2cqw; line-height:1.25}
+
+/* ---- scene E: the website ---- */
+#sE{background:linear-gradient(180deg,var(--night),var(--plum))}
+#sE .cap.top{top:9cqw}
+.phone{
+  position:absolute; left:20cqw; top:30cqw; width:60cqw;
+  border-radius:8.5cqw; padding:2.4cqw; background:#0d0718; box-shadow:0 0 0 .5cqw #3a2455, 0 4cqw 10cqw rgba(0,0,0,.5);
+  opacity:0;
+}
+#sE.on .phone{animation:fadeUp .9s ease-out .5s both}
+.screen{--sh:104cqw; height:var(--sh); border-radius:6.4cqw; overflow:hidden; background:var(--paper); position:relative}
+.page{color:var(--ink); will-change:transform}
+#sE.on .page{animation:scrollPage 6.4s cubic-bezier(.45,0,.35,1) 1.6s both}
+@keyframes scrollPage{to{transform:translateY(calc(-100% + var(--sh)))}}
+.hero{
+  padding:13cqw 5cqw 9cqw; text-align:center;
+  background:radial-gradient(circle at 20% 15%, #ffd0c6 0, transparent 55%), radial-gradient(circle at 85% 70%, #ffe7b3 0, transparent 50%), var(--paper);
+}
+.eyebrow{font-size:2.5cqw; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--dusk)}
+.hero h3{font-family:var(--display); font-weight:400; font-size:10.5cqw; line-height:1.02; margin:3cqw 0 2.5cqw; text-wrap:balance}
+.hero h3 i{display:block; font-size:5cqw; color:var(--rose); font-style:normal; margin:.8cqw 0}
+.hero .date{font-size:3.4cqw; font-weight:600}
+.btn{display:inline-block; margin-top:5cqw; padding:2.2cqw 6cqw; border-radius:9cqw; background:var(--night); color:var(--blush); font-size:3cqw; font-weight:600}
+.count{display:flex; justify-content:center; gap:2cqw; padding:5cqw 3cqw; background:var(--night)}
+.count div{width:11.5cqw; text-align:center; color:var(--blush)}
+.count b{display:block; font-family:var(--display); font-weight:400; font-size:6cqw; color:var(--gold)}
+.count span{font-size:2.1cqw; letter-spacing:.14em; text-transform:uppercase}
+.story{padding:8cqw 6cqw; text-align:center}
+.story h4,.rsvp h4,.gal h4{font-family:var(--display); font-weight:400; font-size:6.4cqw; margin:1.5cqw 0 3cqw}
+.story p{font-size:3.2cqw; line-height:1.55; margin:0 0 2.5cqw}
+.gal{padding:2cqw 4cqw 8cqw; text-align:center}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:2cqw}
+.grid i{display:block; height:22cqw; border-radius:2.5cqw}
+.grid i:nth-child(1){background:radial-gradient(circle at 30% 30%, #ffd0c6, #f08a9b)}
+.grid i:nth-child(2){background:radial-gradient(circle at 70% 30%, #ffe7b3, #ffc247)}
+.grid i:nth-child(3){background:linear-gradient(160deg,#8a4570,#24123b)}
+.grid i:nth-child(4){background:radial-gradient(circle at 40% 60%, #b9e0e0, #2f8189)}
+.grid i:nth-child(5){background:linear-gradient(20deg,#f08a9b,#6b5bc4)}
+.grid i:nth-child(6){background:radial-gradient(circle at 60% 40%, #fff, #ffd0c6)}
+.grid i:nth-child(1),.grid i:nth-child(4){height:28cqw}
+.rsvp{padding:8cqw 6cqw 7cqw; text-align:center; background:var(--blush)}
+.rsvp p{font-size:3.1cqw; margin:0 0 4cqw}
+.foot{padding:4cqw; text-align:center; font-size:2.4cqw; color:var(--dusk); background:var(--blush)}
+.wm{top:164cqw; font-family:var(--body); font-weight:400; font-size:3.5cqw; letter-spacing:.06em; color:var(--blush)}
+.wm b{font-weight:600; color:var(--gold)}
+#sE.on .wm{animation:fadeUp .9s ease-out var(--d) both}
+#sE .cap.end{top:145cqw; font-size:6.4cqw}
+
+/* ---- page chrome ---- */
+.bar{width:min(100%, 360px); height:3px; border-radius:3px; background:#3a2455; overflow:hidden}
+.bar i{display:block; height:100%; width:0; background:var(--rose)}
+.panel{width:min(100%, 360px); display:flex; flex-direction:column; gap:12px}
+.fields{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.fields label{display:flex; flex-direction:column; gap:4px; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#c9a9c9; min-width:0}
+.fields label.wide{grid-column:1/-1}
+.fields input{
+  font:inherit; font-size:15px; letter-spacing:0; text-transform:none; color:var(--blush);
+  background:#2c1a44; border:1px solid #4d3170; border-radius:10px; padding:9px 11px; min-width:0; width:100%;
+}
+.fields input:focus-visible,.go:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+.go{
+  font:inherit; font-weight:600; cursor:pointer; border:0; border-radius:10px; padding:11px 14px;
+  background:var(--rose); color:var(--ink);
+}
+.go:hover{background:#f5a3b0}
+.note{margin:0; font-size:13px; color:#c9a9c9}
+.start{
+  position:absolute; inset:0; display:grid; place-items:center; z-index:5; background:var(--night);
+}
+.start[hidden]{display:none!important}
+</style>
+
+<main class="stage" id="stage" aria-label="Animated love story preview">
+
+  <!-- A: two umbrellas on a rainy street -->
+  <section class="scene" id="sA">
+    <svg viewBox="0 0 360 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="skyA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24123b"/><stop offset=".55" stop-color="#5a2a66"/><stop offset="1" stop-color="#b8587a"/></linearGradient>
+        <radialGradient id="glowA"><stop offset="0" stop-color="#ffc247" stop-opacity=".75"/><stop offset="1" stop-color="#ffc247" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="360" height="640" fill="url(#skyA)"/>
+      <g id="cityA"></g>
+      <rect y="520" width="360" height="120" fill="#1a0e2b"/>
+      <ellipse cx="90" cy="545" rx="70" ry="9" fill="#ffc247" opacity=".18"/>
+      <ellipse cx="270" cy="560" rx="80" ry="9" fill="#f08a9b" opacity=".2"/>
+      <g class="lamp"><circle cx="40" cy="330" r="60" fill="url(#glowA)"/><rect x="38" y="330" width="4" height="190" fill="#120a20"/></g>
+      <g class="lamp"><circle cx="322" cy="350" r="60" fill="url(#glowA)"/><rect x="320" y="350" width="4" height="170" fill="#120a20"/></g>
+      <g id="rainA"></g>
+      <g transform="translate(55 520)"><g class="walk" id="sheA"></g></g>
+      <g transform="translate(305 520) scale(-1 1)"><g class="walk" id="heA"></g></g>
+      <g id="rainA2"></g>
+    </svg>
+    <div class="cap small" style="top:9cqw;--d:.3s"><span data-city>Chennai</span> &middot; July 2019</div>
+    <div class="cap" style="top:17cqw;--d:.9s">It was pouring.</div>
+    <div class="cap gold" style="top:152cqw;--d:3s">Two strangers.<br>Two umbrellas.</div>
+  </section>
+
+  <!-- B: the dropped book -->
+  <section class="scene" id="sB">
+    <svg viewBox="0 0 360 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="skyB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1b5a"/><stop offset=".6" stop-color="#a24f78"/><stop offset="1" stop-color="#f08a9b"/></linearGradient>
+      </defs>
+      <rect width="360" height="640" fill="url(#skyB)"/>
+      <g id="bokehB"></g>
+      <rect y="575" width="360" height="65" fill="#2a1240"/>
+      <g id="rainB"></g>
+      <g transform="translate(95 575) scale(1.45)"><g class="sheWalk"><g id="sheB" class="umbL"></g></g></g>
+      <g transform="translate(262 575) scale(-1.45 1.45)"><g id="heB" class="umbR"></g></g>
+      <g transform="translate(135 415)"><g class="book">
+        <rect x="-11" y="-15" width="22" height="30" rx="3" fill="#f08a9b" stroke="#fff" stroke-width="1.5"/>
+        <rect x="-8" y="-15" width="3" height="30" fill="#c9667f"/>
+        <path d="M2,-3 c-3,-5 -9,-1 0,7 c9,-8 3,-12 0,-7z" fill="#ffc247"/>
+      </g></g>
+      <g id="heartsB"></g>
+    </svg>
+    <div class="cap" style="top:11cqw;--d:.4s">A dropped book.</div>
+    <div class="cap gold" style="top:24cqw;--d:3.1s">A shared umbrella.</div>
+  </section>
+
+  <!-- C: the cafe -->
+  <section class="scene" id="sC">
+    <svg viewBox="0 0 360 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="wallC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d1530"/><stop offset="1" stop-color="#5a2a45"/></linearGradient>
+        <clipPath id="winClip"><rect x="40" y="95" width="280" height="215" rx="12"/></clipPath>
+        <radialGradient id="glowC"><stop offset="0" stop-color="#ffc247" stop-opacity=".9"/><stop offset="1" stop-color="#ffc247" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="360" height="640" fill="url(#wallC)"/>
+      <path d="M-10,48 Q90,100 180,60 T370,52" fill="none" stroke="#120a20" stroke-width="2"/>
+      <g id="bulbsC"></g>
+      <rect x="40" y="95" width="280" height="215" rx="12" fill="#1f1a3e"/>
+      <g clip-path="url(#winClip)">
+        <g id="bokehC"></g>
+        <g id="rainC"></g>
+      </g>
+      <rect x="40" y="95" width="280" height="215" rx="12" fill="none" stroke="#a06a48" stroke-width="7"/>
+      <line x1="180" y1="95" x2="180" y2="310" stroke="#a06a48" stroke-width="5"/>
+      <line x1="40" y1="202" x2="320" y2="202" stroke="#a06a48" stroke-width="5"/>
+      <!-- clock -->
+      <g transform="translate(180 392)">
+        <circle r="30" fill="#ffe1da" stroke="#a06a48" stroke-width="4"/>
+        <g stroke="#24123b" stroke-width="2" stroke-linecap="round"><line y1="-24" y2="-20"/><line y1="24" y2="20"/><line x1="-24" x2="-20"/><line x1="24" x2="20"/></g>
+        <line class="hour" y2="-14" stroke="#24123b" stroke-width="4" stroke-linecap="round"/>
+        <line class="minute" y2="-22" stroke="#c9667f" stroke-width="2.5" stroke-linecap="round"/>
+        <circle r="3" fill="#24123b"/>
+      </g>
+      <!-- table -->
+      <rect y="470" width="360" height="170" fill="#7a4a34"/>
+      <rect y="470" width="360" height="9" fill="#9a6044"/>
+      <g id="cupsC"></g>
+      <g transform="translate(180 462) rotate(-4)">
+        <rect x="-18" y="-6" width="36" height="8" rx="2" fill="#f08a9b"/><rect x="-16" y="-12" width="32" height="7" rx="2" fill="#ffe1da"/>
+      </g>
+    </svg>
+    <div class="cap" style="top:141cqw;--d:.5s">One cup of coffee.</div>
+    <div class="cap gold" style="top:155cqw;--d:3s">Five hours of talking.</div>
+  </section>
+
+  <!-- D: milestones -->
+  <section class="scene" id="sD">
+    <div class="cap" style="--d:.2s">Five years later&hellip;</div>
+    <div class="ms">
+      <div class="m" style="--d:.8s"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 3v3M12 3v3"/></svg></div><div><b>2019</b><span>First coffee</span></div></div>
+      <div class="m" style="--d:2.2s"><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 14l8-2-5-7 2-1 9 6 6-2c1.2-.4 2 .8 1.2 1.6L18 15l-5 6-1.5-1 1-6z" transform="translate(0 -1)"/></svg></div><div><b>2022</b><span>First trip together</span></div></div>
+      <div class="m" style="--d:3.6s"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="15" r="5.5"/><path d="M8.5 6.5L10 3h4l1.5 3.5L12 9.5z"/></svg></div><div><b>2025</b><span>He asked.<br>She said yes.</span></div></div>
+    </div>
+  </section>
+
+  <!-- E: the website -->
+  <section class="scene" id="sE">
+    <div class="cap top" style="--d:.2s">And now their story<br>lives on a page.</div>
+    <div class="phone" aria-hidden="true">
+      <div class="screen"><div class="page">
+        <div class="hero">
+          <div class="eyebrow">We&rsquo;re getting married</div>
+          <h3><span data-n1>Priya</span><i>&amp;</i><span data-n2>Arjun</span></h3>
+          <div class="date">14 February 2026</div>
+          <div class="btn">Open our invite</div>
+        </div>
+        <div class="count">
+          <div><b>112</b><span>Days</span></div><div><b>06</b><span>Hours</span></div><div><b>41</b><span>Mins</span></div><div><b>09</b><span>Secs</span></div>
+        </div>
+        <div class="story">
+          <div class="eyebrow">Our story</div>
+          <h4>How we met</h4>
+          <p>It was pouring in <span data-city>Chennai</span>. A book fell, an umbrella was shared, and one coffee turned into five hours.</p>
+          <p>Six years later, we&rsquo;d love you to be there.</p>
+        </div>
+        <div class="gal">
+          <h4>Moments</h4>
+          <div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="rsvp">
+          <h4>Will you join us?</h4>
+          <p>Let us know by 1 January.</p>
+          <div class="btn" style="margin:0">Yes, I&rsquo;ll be there</div>
+        </div>
+        <div class="foot">made with iloveeefriez</div>
+      </div></div>
+    </div>
+    <div class="cap wm" style="--d:5.2s">made with <b>iloveeefriez</b></div>
+    <div class="cap end" style="--d:7.2s">Your story deserves a page too.</div>
+  </section>
+
+  <div class="start" id="start" hidden><button class="go" id="playBtn" type="button">Play the story</button></div>
+</main>
+
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+
+<div class="panel">
+  <div class="fields">
+    <label for="n1">Name 1<input id="n1" value="Priya" autocomplete="off"></label>
+    <label for="n2">Name 2<input id="n2" value="Arjun" autocomplete="off"></label>
+    <label class="wide" for="city">City they met in<input id="city" value="Chennai" autocomplete="off"></label>
+  </div>
+  <button class="go" id="replay" type="button">Replay</button>
+  <p class="note">30 seconds, 9:16. Change the names, replay, then screen-record it for a Reel or Short.</p>
+</div>
+
+<script>
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var seed = 7;
+  function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+  function $(id){ return document.getElementById(id); }
+
+  /* A flat-illustration person; feet at (0,0), facing +x. */
+  function person(o){
+    return '' +
+    '<g class="bob">' +
+      '<g class="stepB"><line class="leg l1" x1="-7" y1="-62" x2="-7" y2="0"/><line class="leg l2" x1="7" y1="-62" x2="7" y2="0"/></g>' +
+      (o.long ? '<rect x="-19" y="-166" width="38" height="58" rx="17" fill="'+o.hair+'"/>' : '') +
+      '<rect x="-17" y="-134" width="34" height="78" rx="15" fill="'+o.coat+'"/>' +
+      '<circle cx="0" cy="-152" r="16" fill="'+o.skin+'"/>' +
+      '<path d="M-16.5,-153 A16.5,16.5 0 0 1 16.5,-153 Q4,-163 -16.5,-153Z" fill="'+o.hair+'"/>' +
+      '<circle cx="-3" cy="-150" r="1.7" fill="#1a0e2b"/><circle cx="7" cy="-150" r="1.7" fill="#1a0e2b"/>' +
+      '<circle cx="9" cy="-145" r="3" fill="#f08a9b" opacity=".45"/>' +
+      '<g class="'+(o.umbClass||'umbWrap')+'" transform="translate(22 -108)"><g class="umbtilt">' +
+        '<line x1="0" y1="0" x2="0" y2="-86" stroke="#120a20" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<path d="M-50,-84 Q0,-142 50,-84 Q25,-95 0,-84 Q-25,-95 -50,-84Z" fill="'+o.umb+'"/>' +
+        '<path d="M0,-84 Q-10,-112 0,-122 Q10,-112 0,-84Z" fill="#fff" opacity=".18"/>' +
+        '<line x1="0" y1="-122" x2="0" y2="-130" stroke="#120a20" stroke-width="2.5" stroke-linecap="round"/>' +
+      '</g></g>' +
+    '</g>';
+  }
+  var SHE = {coat:'#ffc247', hair:'#2b1620', skin:'#e9b48f', umb:'#f08a9b', long:true};
+  var HE  = {coat:'#2f8189', hair:'#1a0e2b', skin:'#c98d65', umb:'#6b5bc4'};
+  $('sheA').innerHTML = person(SHE);
+  $('heA').innerHTML  = person(HE);
+  // In scene B her umbrella folds away separately.
+  var sheB = person(SHE).replace('<g class="umbWrap"', '<g class="umbWrap sheUmb"');
+  $('sheB').innerHTML = sheB;
+  $('heB').innerHTML = person(HE);
+
+  /* city skyline with lit windows */
+  var city = '', x = -10;
+  while (x < 370){
+    var w = 28 + rnd()*30, h = 110 + rnd()*170, y = 520 - h;
+    city += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+(rnd()>.5?'#2a1442':'#33194c')+'"/>';
+    for (var wy = y + 12; wy < 505; wy += 16){
+      for (var wx = x + 5; wx < x + w - 6; wx += 11){
+        if (rnd() > .62) city += '<rect x="'+wx+'" y="'+wy+'" width="5" height="7" fill="#ffc247" opacity="'+(.4 + rnd()*.5).toFixed(2)+'"/>';
+      }
+    }
+    x += w + 2;
+  }
+  $('cityA').innerHTML = city;
+
+  /* rain: a vertically periodic column of streaks, slid by one period per loop, under a skew */
+  function rain(period, count, len, dur, op, width){
+    var base = [], i, k, out = '';
+    for (i = 0; i < count; i++) base.push([rnd()*420 - 30, rnd()*period]);
+    for (k = -1; k * period < 700; k++){
+      base.forEach(function(b){
+        out += '<line x1="'+b[0].toFixed(1)+'" y1="'+(b[1]+k*period).toFixed(1)+'" x2="'+b[0].toFixed(1)+'" y2="'+(b[1]+k*period+len).toFixed(1)+'"/>';
+      });
+    }
+    return '<g transform="skewX(-12)" stroke="#fff" stroke-linecap="round" stroke-width="'+width+'" opacity="'+op+'">' +
+      '<g class="rainfall" style="--p:'+period+'px;--s:'+dur+'s">'+out+'</g></g>';
+  }
+  $('rainA').innerHTML  = rain(160, 16, 20, .9, .35, 1.2);
+  $('rainA2').innerHTML = rain(110, 10, 28, .6, .5, 1.6);
+  $('rainB').innerHTML  = rain(150, 12, 22, .9, .3, 1.2);
+  $('rainC').innerHTML  = rain(120, 14, 22, .8, .45, 1.4);
+
+  /* soft street lights in scene B and out the cafe window */
+  function bokeh(n, x0, x1, y0, y1, rmin, rmax){
+    var s = '';
+    for (var i = 0; i < n; i++){
+      var c = ['#ffc247','#f08a9b','#ffe1da'][i % 3];
+      s += '<circle class="bokeh" style="animation-delay:'+(rnd()*2).toFixed(2)+'s" cx="'+(x0 + rnd()*(x1-x0)).toFixed(0)+'" cy="'+(y0 + rnd()*(y1-y0)).toFixed(0)+'" r="'+(rmin + rnd()*(rmax-rmin)).toFixed(0)+'" fill="'+c+'" opacity=".5"/>';
+    }
+    return s;
+  }
+  $('bokehB').innerHTML = bokeh(16, 0, 360, 180, 520, 8, 26);
+  $('bokehC').innerHTML = bokeh(14, 40, 320, 140, 300, 6, 18);
+
+  /* cafe string lights */
+  var bulbs = '', bx;
+  for (bx = 0; bx <= 8; bx++){
+    var px = 10 + bx*42, py = 52 + Math.sin(bx/8*Math.PI*2) * 14 + 22;
+    bulbs += '<circle class="bulb" style="animation-delay:'+(rnd()*1.5).toFixed(2)+'s" cx="'+px+'" cy="'+py.toFixed(0)+'" r="6" fill="#ffc247"/><circle cx="'+px+'" cy="'+py.toFixed(0)+'" r="16" fill="url(#glowC)" opacity=".35"/>';
+  }
+  $('bulbsC').innerHTML = bulbs;
+
+  /* two cups with steam */
+  function cup(cx, col){
+    return '<g transform="translate('+cx+' 470)">' +
+      '<ellipse cx="0" cy="4" rx="40" ry="8" fill="#ffe1da"/>' +
+      '<path d="M-28,-34 H28 V-12 Q28,2 14,2 H-14 Q-28,2 -28,-12Z" fill="'+col+'"/>' +
+      '<path d="M28,-28 h8 a9,9 0 0 1 0,18 h-8" fill="none" stroke="'+col+'" stroke-width="5"/>' +
+      '<ellipse cx="0" cy="-34" rx="28" ry="6" fill="#4a2a1c"/>' +
+      '<path class="steam" d="M-10,-44 q-8,-14 0,-26 q8,-12 0,-24" style="animation-delay:.2s"/>' +
+      '<path class="steam" d="M6,-44 q-8,-14 0,-26 q8,-12 0,-24" style="animation-delay:.9s"/>' +
+      '<path class="steam" d="M20,-44 q-8,-14 0,-26 q8,-12 0,-24" style="animation-delay:1.5s"/>' +
+    '</g>';
+  }
+  $('cupsC').innerHTML = cup(88, '#f08a9b') + cup(272, '#6b5bc4');
+
+  /* hearts rising after the umbrella is shared */
+  var hearts = '';
+  for (var h = 0; h < 8; h++){
+    var hx = 150 + rnd()*90, dx = (rnd()*60 - 30).toFixed(0), d = (4.1 + h*.28).toFixed(2);
+    hearts += '<g transform="translate('+hx.toFixed(0)+' 330)"><path class="heart" style="--d:'+d+'s;--dx:'+dx+'px" d="M0,0 C-7,-9 -19,-2 0,14 C19,-2 7,-9 0,0Z" fill="'+(h%2?'#f08a9b':'#ffc247')+'"/></g>';
+  }
+  $('heartsB').innerHTML = hearts;
+
+  /* ---- timeline ---- */
+  var stage = $('stage'), scenes = ['sA','sB','sC','sD','sE'].map($),
+      STARTS = [0, 5.5, 11, 16, 21], END = 30, raf = 0, t0 = 0, next = 0, prog = $('prog');
+
+  function tick(){
+    var t = (performance.now() - t0) / 1000;
+    while (next < STARTS.length && t >= STARTS[next]){ scenes[next].classList.add('on'); next++; }
+    prog.style.width = Math.min(100, t / END * 100) + '%';
+    if (t < END) raf = requestAnimationFrame(tick);
+  }
+  function play(){
+    cancelAnimationFrame(raf);
+    $('start').hidden = true;
+    stage.classList.add('reset');
+    scenes.forEach(function(s){ s.classList.remove('on'); });
+    void stage.offsetWidth;
+    stage.classList.remove('reset');
+    next = 0; t0 = performance.now(); tick();
+  }
+  $('replay').addEventListener('click', play);
+  $('playBtn').addEventListener('click', play);
+
+  function bind(id, attr, fallback){
+    var el = $(id);
+    function sync(){
+      var v = el.value.trim() || fallback;
+      document.querySelectorAll('['+attr+']').forEach(function(n){ n.textContent = v; });
+    }
+    el.addEventListener('input', sync); sync();
+  }
+  bind('n1', 'data-n1', 'Priya');
+  bind('n2', 'data-n2', 'Arjun');
+  bind('city', 'data-city', 'Chennai');
+
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ $('start').hidden = false; }
+  else { play(); }
+})();
+</script>
