@@ -46,6 +46,7 @@ body{
 @keyframes fadeIn{from{opacity:0} to{opacity:1}}
 
 /* ---- people ---- */
+.sil{filter:drop-shadow(1.8px 0 0 rgba(255,194,71,.95))}
 .leg,.arm{transform-box:fill-box; transform-origin:50% 0}
 .umbtilt{transform-origin:0 0}
 
@@ -216,6 +217,7 @@ body{
       </defs>
       <rect width="360" height="640" fill="url(#skyA)"/>
       <g id="cityA"></g>
+      <circle cx="180" cy="400" r="230" fill="url(#glowA)" opacity=".5"/>
       <rect y="520" width="360" height="120" fill="#1a0e2b"/>
       <ellipse cx="90" cy="545" rx="70" ry="9" fill="#ffc247" opacity=".18"/>
       <ellipse cx="270" cy="560" rx="80" ry="9" fill="#f08a9b" opacity=".2"/>
@@ -354,59 +356,44 @@ body{
   function $(id){ return document.getElementById(id); }
 
   /* A flat-illustration person; feet at (0,0), facing +x. */
+  /* Faceless, backlit silhouettes: reads as elegant at reel size and avoids uncanny faces. */
   function person(o){
-    var skin = o.skin, skinD = o.skinD, hair = o.hair, coat = o.coat, coatD = o.coatD;
-    var back = o.long
-      ? '<path d="M-16,-172 C-31,-152 -28,-122 -19,-106 C-9,-110 -7,-132 -12,-152Z" fill="'+hair+'"/>' +
-        '<path d="M16,-172 C31,-152 28,-122 19,-106 C9,-110 7,-132 12,-152Z" fill="'+hair+'"/>' +
-        '<ellipse cx="0" cy="-173" rx="18" ry="19" fill="'+hair+'"/>'
-      : '';
-    var front = o.long
-      ? '<path d="M-16,-171 Q-16,-192 2,-190 Q18,-188 16,-168 Q9,-181 -1,-178 Q-10,-176 -16,-171Z" fill="'+hair+'"/>' +
-        '<path d="M-9,-185 Q0,-190 9,-184" fill="none" stroke="#5a3342" stroke-width="1.6" stroke-linecap="round"/>' +
-        '<circle cx="-12" cy="-178" r="3.2" fill="#ffc247"/><circle cx="-12" cy="-178" r="1.2" fill="#fff3ee"/>'
-      : '<path d="M-16.5,-170 Q-18,-191 0,-191 Q19,-191 16.5,-169 Q15,-179 7,-180 Q0,-185 -7,-180 Q-14,-178 -16.5,-170Z" fill="'+hair+'"/>' +
-        '<path d="M-6,-186 Q2,-191 10,-186" fill="none" stroke="#3a2a55" stroke-width="1.6" stroke-linecap="round"/>';
-    var brow = o.long ? 1.5 : 2.3;
-    var legs = [[-7,-4],[7,10]].map(function(p, i){
-      return '<g class="leg l'+(i+1)+'"><line x1="'+p[0]+'" y1="-78" x2="'+p[0]+'" y2="-7" stroke="'+o.pants+'" stroke-width="10.5" stroke-linecap="round"/>' +
-        '<ellipse cx="'+p[1]+'" cy="-3.5" rx="10" ry="4.8" fill="'+o.shoe+'" stroke="#1a0e2b" stroke-width="1"/></g>';
-    }).join('');
+    var c = o.body;
+    function parts(){
+      var legs = [[-5.5, -3], [5.5, 8]].map(function(p, i){
+        return '<g class="leg l'+(i+1)+'"><line x1="'+p[0]+'" y1="-74" x2="'+p[0]+'" y2="-6" stroke="'+c+'" stroke-width="'+o.leg+'" stroke-linecap="round"/>' +
+          '<ellipse cx="'+p[1]+'" cy="-3" rx="8.500" ry="3.800" fill="'+c+'"/></g>';
+      }).join('');
+      return '<g class="stepB">' + legs + '</g>' +
+        '<rect x="-3.500" y="-160" width="7" height="12" fill="'+c+'"/>' +
+        '<path d="'+o.coat+'" fill="'+c+'"/>' +
+        '<ellipse cx="0" cy="-171" rx="'+o.hx+'" ry="12" fill="'+c+'"/>' +
+        '<path d="'+o.hair+'" fill="'+c+'"/>' +
+        '<path d="M'+o.sh+',-148 Q26,-136 22,-118" fill="none" stroke="'+c+'" stroke-width="'+o.arm+'" stroke-linecap="round"/>' +
+        '<circle cx="22" cy="-114" r="4.600" fill="'+c+'"/>';
+    }
     return '' +
-    '<ellipse cx="2" cy="1" rx="26" ry="5" fill="#000" opacity=".28"/>' +
+    '<ellipse cx="2" cy="2" rx="24" ry="4" fill="#000" opacity=".3"/>' +
+    '<g transform="scale(1 -1)" opacity=".14">' + parts() + '</g>' +
     '<g class="bob">' +
-      '<g class="stepB">' + legs + '</g>' +
-      back +
-      '<g class="arm armB"><line x1="-17" y1="-146" x2="-21" y2="-108" stroke="'+coat+'" stroke-width="10" stroke-linecap="round"/><circle cx="-21" cy="-102" r="5" fill="'+skin+'"/></g>' +
-      '<rect x="-5" y="-157" width="10" height="13" rx="3" fill="'+skinD+'"/>' +
-      '<path d="M-21,-150 Q-24,-130 -17,-112 L-25,-72 Q0,-65 25,-72 L17,-112 Q24,-130 21,-150 Q0,-159 -21,-150Z" fill="'+coat+'"/>' +
-      '<path d="M2,-153 Q22,-150 21,-150 Q24,-130 17,-112 L25,-72 Q14,-69 4,-68Z" fill="'+coatD+'" opacity=".35"/>' +
-      '<path d="M-6,-154 L0,-128 L6,-154Z" fill="'+o.inner+'"/>' +
-      '<path d="M-7,-154 L-1,-126 L-14,-135Z" fill="'+coatD+'"/><path d="M7,-154 L1,-126 L14,-135Z" fill="'+coatD+'"/>' +
-      '<path d="M-17,-113 Q0,-108 17,-113 L17,-107 Q0,-102 -17,-107Z" fill="'+coatD+'"/>' +
-      (o.scarf ? '<path d="M-12,-154 Q0,-142 12,-154 L11,-146 Q0,-135 -11,-146Z" fill="'+o.scarf+'"/><path d="M6,-146 L10,-124 L4,-126 L2,-143Z" fill="'+o.scarf+'"/>' : '') +
-      '<ellipse cx="0" cy="-169" rx="15" ry="17.5" fill="'+skin+'"/>' +
-      '<circle cx="-14.500" cy="-166" r="3.200" fill="'+skin+'"/><circle cx="14.500" cy="-166" r="3.200" fill="'+skin+'"/>' +
-      front +
-      '<path d="M-8,-174 Q-4,-177 0,-175" fill="none" stroke="'+hair+'" stroke-width="'+brow+'" stroke-linecap="round"/><path d="M4,-175 Q8,-177 12,-174" fill="none" stroke="'+hair+'" stroke-width="'+brow+'" stroke-linecap="round"/>' +
-      '<ellipse cx="-3" cy="-168" rx="2" ry="2.5" fill="#1a0e2b"/><ellipse cx="8" cy="-168" rx="2" ry="2.5" fill="#1a0e2b"/>' +
-      '<circle cx="-2.300" cy="-169" r=".8" fill="#fff"/><circle cx="8.700" cy="-169" r=".8" fill="#fff"/>' +
-      '<path d="M2.500,-166 q2.500,4.500 -1,5.500" fill="none" stroke="'+skinD+'" stroke-width="1.3" stroke-linecap="round"/>' +
-      '<path d="M-2,-157 Q3.500,-152.500 9,-157.500" fill="none" stroke="#a8434f" stroke-width="1.7" stroke-linecap="round"/>' +
-      '<circle cx="-8" cy="-161" r="3.400" fill="#f08a9b" opacity=".35"/><circle cx="12" cy="-161" r="3.400" fill="#f08a9b" opacity=".35"/>' +
-      (o.long ? '' : '<path d="M-12,-160 Q0,-146 13,-160 Q0,-151 -12,-160Z" fill="#1a0e2b" opacity=".12"/>') +
-      '<path d="M15,-147 Q25,-134 22,-122" fill="none" stroke="'+coat+'" stroke-width="10" stroke-linecap="round"/>' +
+      '<g class="sil">' + parts() +
+        (o.scarf ? '<path d="M-9,-153 Q0,-145 9,-153 L8,-147 Q0,-139 -8,-147Z" fill="'+o.scarf+'"/>' : '') +
+      '</g>' +
       '<g class="'+(o.umbClass||'umbWrap')+'" transform="translate(22 -116)"><g class="umbtilt">' +
-        '<line x1="0" y1="0" x2="0" y2="-86" stroke="#120a20" stroke-width="2.5" stroke-linecap="round"/>' +
-        '<path d="M-50,-84 Q0,-142 50,-84 Q25,-95 0,-84 Q-25,-95 -50,-84Z" fill="'+o.umb+'"/>' +
-        '<path d="M0,-84 Q-10,-112 0,-122 Q10,-112 0,-84Z" fill="#fff" opacity=".18"/>' +
-        '<line x1="0" y1="-122" x2="0" y2="-130" stroke="#120a20" stroke-width="2.5" stroke-linecap="round"/>' +
-        '<circle cx="0" cy="2" r="5.200" fill="'+skin+'"/>' +
+        '<line x1="0" y1="0" x2="0" y2="-86" stroke="#0d0618" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<path d="M-52,-84 Q0,-146 52,-84 Q26,-96 0,-84 Q-26,-96 -52,-84Z" fill="'+o.umb+'"/>' +
+        '<path d="M0,-84 Q-12,-114 0,-126 Q12,-114 0,-84Z" fill="#fff" opacity=".2"/>' +
+        '<path d="M-52,-84 Q0,-146 52,-84" fill="none" stroke="#fff" stroke-width="1.2" opacity=".5"/>' +
+        '<line x1="0" y1="-126" x2="0" y2="-134" stroke="#0d0618" stroke-width="2.5" stroke-linecap="round"/>' +
       '</g></g>' +
     '</g>';
   }
-  var SHE = {coat:'#ffc247', coatD:'#d9951a', inner:'#fff3ee', pants:'#2b1f3d', shoe:'#3a2a55', skin:'#e9b48f', skinD:'#d09670', hair:'#2b1620', scarf:'#f08a9b', umb:'#f08a9b', long:true};
-  var HE  = {coat:'#2f8189', coatD:'#1f5f66', inner:'#ffe1da', pants:'#1f2a44', shoe:'#fff3ee', skin:'#c98d65', skinD:'#b07048', hair:'#1a0e2b', umb:'#6b5bc4'};
+  var SHE = {body:'#1b0f2e', leg:8.5, hx:9.5, sh:14, arm:6.5, scarf:'#f08a9b', umb:'#f08a9b',
+    coat:'M-15,-150 Q-17,-128 -11,-112 L-22,-66 Q0,-59 22,-66 L11,-112 Q17,-128 15,-150 Q0,-158 -15,-150Z',
+    hair:'M-10.500,-172 Q-12,-188 0,-188 Q12,-188 10.500,-172 Q15,-154 12,-136 Q7,-131 4,-140 L3,-160 L-3,-160 L-4,-140 Q-7,-131 -12,-136 Q-15,-154 -10.500,-172Z'};
+  var HE  = {body:'#14122a', leg:11.5, hx:10.500, sh:18, arm:8, umb:'#6b5bc4',
+    coat:'M-20,-152 Q-22,-130 -18,-110 L-21,-58 Q0,-53 21,-58 L18,-110 Q22,-130 20,-152 Q0,-161 -20,-152Z',
+    hair:'M-11,-173 Q-12,-189 0,-189 Q12,-189 11,-173 Q7,-181 0,-180 Q-7,-181 -11,-173Z'};
   $('sheA').innerHTML = person(SHE);
   $('heA').innerHTML  = person(HE);
   // In scene B her umbrella folds away separately.
