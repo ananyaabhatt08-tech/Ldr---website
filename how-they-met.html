@@ -161,6 +161,26 @@ body{
 #sE.on .wm{animation:fadeUp .9s ease-out var(--d) both}
 #sE .cap.end{top:145cqw; font-size:6.4cqw}
 
+
+.pp{color:#fff; font-family:var(--body)}
+.pcover{margin:5cqw 4cqw 0; border-radius:4cqw; padding:9cqw 5cqw; background:linear-gradient(160deg,#9a78c9,#7A58A9 55%,#5b3f86); text-align:center}
+.pc1{font-family:var(--display); font-size:8.4cqw; line-height:1}
+.pc2{font-size:3.1cqw; margin:2cqw 0 5cqw; opacity:.9}
+.pc3{display:inline-block; background:rgba(255,255,255,.16); border-radius:9cqw; padding:1.8cqw 4cqw; font-size:2.8cqw}
+.pc3 b{font-family:var(--display); font-weight:400; font-size:3.6cqw; color:#ffe7b3}
+.pbody{padding:6cqw 5cqw 8cqw}
+.pbody h4{font-family:var(--display); font-weight:400; font-size:7cqw; margin:0 0 2cqw}
+.pprice{display:flex; align-items:baseline; gap:2.5cqw; margin-bottom:4cqw}
+.pprice s{font-size:3.4cqw; opacity:.55}
+.pprice b{font-size:6.4cqw; color:#ffe7b3}
+.pbtn{background:#000; border-radius:9cqw; text-align:center; padding:3cqw 0; font-size:3.4cqw; font-weight:600; box-shadow:inset 0 0 0 .3cqw rgba(255,255,255,.35)}
+.pbtn.alt{margin-top:5cqw}
+.pdesc{font-size:3cqw; line-height:1.5; margin:5cqw 0 3cqw; opacity:.8}
+.pfeat{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2.4cqw}
+.pfeat li{font-size:3cqw; line-height:1.35; padding:2.6cqw 3cqw 2.6cqw 8cqw; border-radius:2.6cqw; background:#23262c; position:relative}
+.pfeat li::before{content:""; position:absolute; left:3cqw; top:50%; width:2.4cqw; height:2.4cqw; margin-top:-1.2cqw; border-radius:50%; background:#ffc247}
+.cap.url{top:157.5cqw; font-family:var(--body); font-weight:600; font-size:3.2cqw; letter-spacing:.02em; color:#fff}
+
 /* ---- page chrome ---- */
 .bar{width:min(100%, 360px); height:3px; border-radius:3px; background:#3a2455; overflow:hidden}
 .bar i{display:block; height:100%; width:0; background:var(--rose)}
@@ -285,38 +305,30 @@ body{
 
   <!-- E: the website -->
   <section class="scene" id="sE">
-    <div class="cap top" style="--d:.2s">And now their story<br>lives on a page.</div>
+    <div class="cap top" style="--d:.2s">Now turn your story<br>into a website.</div>
     <div class="phone" aria-hidden="true">
-      <div class="screen"><div class="page">
-        <div class="hero">
-          <div class="eyebrow">We&rsquo;re getting married</div>
-          <h3><span data-n1>Priya</span><i>&amp;</i><span data-n2>Arjun</span></h3>
-          <div class="date">14 February 2027</div>
-          <div class="btn">Open our invite</div>
-        </div>
-        <div class="count">
-          <div><b>112</b><span>Days</span></div><div><b>06</b><span>Hours</span></div><div><b>41</b><span>Mins</span></div><div><b>09</b><span>Secs</span></div>
-        </div>
-        <div class="story">
-          <div class="eyebrow">Our story</div>
-          <h4>How we met</h4>
-          <p>It was pouring in <span data-city>Chennai</span>. A book fell, an umbrella was shared, and one coffee turned into five hours.</p>
-          <p>Now we&rsquo;d love you to be there too.</p>
-        </div>
-        <div class="gal">
-          <h4>Moments</h4>
-          <div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        </div>
-        <div class="rsvp">
-          <h4>Will you join us?</h4>
-          <p>Let us know by 1 January.</p>
-          <div class="btn" style="margin:0">Yes, I&rsquo;ll be there</div>
-        </div>
-        <div class="foot">made with iloveeefriez</div>
-      </div></div>
+      <div class="screen" style="background:#16181c"><div class="page pp">
+          <div class="pcover"><div class="pc1">Evermore</div><div class="pc2">A love story, built page by page.</div><div class="pc3"><b>7</b> yrs <b>3</b> mo <b>9</b> d together</div></div>
+          <div class="pbody">
+            <h4>Anniversary website</h4>
+            <div class="pprice"><s>&#8377;499</s><b>&#8377;199</b></div>
+            <div class="pbtn">Get it now</div>
+            <p class="pdesc">Build it step by step, watch it come to life in a live phone preview, then share your own link.</p>
+            <ul class="pfeat">
+              <li>Their name on the cover, with a live &ldquo;together for&rdquo; counter</li>
+              <li>Your story as a timeline, with photos</li>
+              <li>A photo wall of polaroids they can drag around</li>
+              <li>Memory match, quiz and scratch card games</li>
+              <li>A love letter that types itself out</li>
+              <li>Music, a password and six colour palettes</li>
+            </ul>
+            <div class="pbtn alt">Get it now</div>
+          </div>
+        </div></div>
     </div>
     <div class="cap wm" style="--d:5.2s">made with <b>iloveeefriez</b></div>
-    <div class="cap end" style="--d:7.2s">Your story deserves a page too.</div>
+    <div class="cap end" style="--d:6s">Make yours today.</div>
+    <div class="cap url" style="--d:6.8s">Link in bio</div>
   </section>
 
   <div class="start" id="start" hidden><button class="go" id="playBtn" type="button">Play the story</button></div>
@@ -477,7 +489,7 @@ body{
 
   /* ---- timeline ---- */
   var stage = $('stage'), scenes = ['sA','sB','sC','sD','sE'].map($),
-      STARTS = [0, 5.5, 11, 16, 21], END = 30, raf = 0, t0 = 0, next = 0, prog = $('prog');
+      STARTS = [0, 5.5, 11, 16, 21], END = 33, raf = 0, t0 = 0, next = 0, prog = $('prog');
 
   function tick(){
     var t = (performance.now() - t0) / 1000;
