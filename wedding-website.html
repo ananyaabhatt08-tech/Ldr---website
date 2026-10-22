@@ -1,0 +1,423 @@
+<title>Priya and Arjun Wedding</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Young+Serif&display=swap" rel="stylesheet">
+<style>
+/* Layout: one phone-first column (people arrive from an Instagram link): hero, countdown, story timeline,
+   events tabs, photo moments with lightbox, RSVP form. Same palette and type as the "How They Met" reel. */
+:root{
+  --night:#24123b; --plum:#4a2358; --dusk:#8a4570; --rose:#f08a9b; --blush:#ffe1da;
+  --gold:#ffc247; --teal:#2f8189; --ink:#1a0e2b; --paper:#fff3ee; --peri:#6b5bc4; --line:#e9cfc8;
+  --display:'Young Serif',Georgia,serif; --body:'Figtree',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:64px}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.55; margin:0;
+}
+.w{
+  max-width:600px; margin:0 auto;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+h1,h2,h3{font-family:var(--display); font-weight:400; margin:0; text-wrap:balance; line-height:1.08}
+h2{font-size:clamp(28px, 7vw, 38px)}
+.eyebrow{font-size:12px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--dusk)}
+section{padding-block:56px}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px}
+.btn{
+  display:inline-block; border:0; border-radius:999px; padding:13px 26px; background:var(--night); color:var(--blush);
+  font-weight:600; text-decoration:none; font-size:15px;
+}
+.btn:hover{background:var(--plum)}
+.btn.ghost{background:transparent; color:var(--night); box-shadow:inset 0 0 0 2px var(--night)}
+.btn.ghost:hover{background:var(--blush)}
+
+/* sticky nav */
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); background:var(--paper); z-index:30}
+nav{
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; background:rgba(255,243,238,.94); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+nav .w{display:flex; align-items:center; gap:18px; height:54px}
+nav .mono{font-family:var(--display); font-size:19px; color:var(--night); flex:none}
+nav .links{display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; margin-left:auto; min-width:0}
+nav .links::-webkit-scrollbar{display:none}
+nav a{padding:8px 11px; border-radius:999px; font-size:14px; font-weight:600; color:var(--plum); text-decoration:none; white-space:nowrap}
+nav a:hover{background:var(--blush)}
+
+/* hero */
+.hero{
+  position:relative; overflow:hidden; text-align:center; padding-block:64px 72px;
+  background:
+    radial-gradient(circle at 15% 10%, #ffd0c6 0, transparent 50%),
+    radial-gradient(circle at 90% 75%, #ffe7b3 0, transparent 48%), var(--paper);
+}
+.hero .w{position:relative; z-index:1}
+.hero h1{font-size:clamp(52px, 17vw, 96px); margin:18px 0 10px}
+.hero h1 i{display:block; font-style:normal; font-size:.38em; color:var(--rose); margin:.15em 0}
+.hero .date{font-size:18px; font-weight:600}
+.hero .place{color:var(--dusk); margin:4px 0 30px}
+.umb{width:150px; margin:0 auto 6px; display:block}
+.fl{position:absolute; bottom:-30px; opacity:0; z-index:0; animation:rise var(--dur) ease-in var(--del) infinite}
+@keyframes rise{0%{opacity:0; transform:translateY(0) scale(.6)} 15%{opacity:.8} 100%{opacity:0; transform:translateY(-560px) translateX(var(--dx)) scale(1.1)}}
+
+/* countdown */
+.count{background:var(--night); color:var(--blush); text-align:center; padding-block:40px}
+.count .eyebrow{color:var(--gold)}
+.cd{display:flex; justify-content:center; gap:10px; margin-top:16px}
+.cd div{width:72px; padding:14px 0 10px; border-radius:16px; background:var(--plum)}
+.cd b{display:block; font-family:var(--display); font-weight:400; font-size:34px; line-height:1; color:var(--gold); font-variant-numeric:tabular-nums}
+.cd span{font-size:11px; letter-spacing:.16em; text-transform:uppercase}
+
+/* story */
+.lead{max-width:46ch; margin:14px 0 0; color:#4a3a5c}
+.tl{list-style:none; margin:34px 0 0; padding:0; position:relative; display:flex; flex-direction:column; gap:28px}
+.tl::before{content:""; position:absolute; left:27px; top:20px; bottom:20px; width:2px; background:var(--line)}
+.tl li{display:flex; gap:18px; position:relative}
+.tl .ic{flex:none; width:56px; height:56px; border-radius:50%; background:var(--night); display:grid; place-items:center}
+.tl .ic svg{width:26px; height:26px; fill:none; stroke:var(--gold); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.tl time{font-size:12px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--dusk)}
+.tl h3{font-size:22px; margin:2px 0 6px}
+.tl p{margin:0; color:#4a3a5c}
+
+/* events */
+.when{background:var(--blush)}
+.tabs{display:flex; gap:8px; margin:26px 0 18px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  flex:none; border:0; border-radius:999px; padding:10px 18px; background:#fff; color:var(--night); font-weight:600; font-size:15px;
+  box-shadow:inset 0 0 0 1.5px var(--line);
+}
+.tabs button[aria-selected="true"]{background:var(--night); color:var(--blush); box-shadow:none}
+.card{background:#fff; border-radius:22px; padding:26px 24px; box-shadow:0 10px 30px rgba(74,35,88,.08)}
+.card h3{font-size:30px}
+.card .when-line{margin:6px 0 18px; font-weight:600; color:var(--dusk)}
+.facts{display:grid; grid-template-columns:auto 1fr; gap:8px 16px; margin:0 0 22px; font-size:15px}
+.facts dt{font-weight:600; color:var(--dusk)}
+.facts dd{margin:0}
+.actions{display:flex; flex-wrap:wrap; gap:10px}
+
+/* moments */
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:26px}
+.tile{
+  border:0; padding:0; border-radius:18px; overflow:hidden; position:relative; aspect-ratio:1; color:#fff; text-align:left;
+}
+.tile:nth-child(3n+1){aspect-ratio:.85}
+.tile svg.glyph{position:absolute; left:50%; top:42%; width:38%; transform:translate(-50%,-50%); fill:none; stroke:#fff; stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round; opacity:.9}
+.tile span{position:absolute; left:12px; right:12px; bottom:10px; font-size:13px; font-weight:600; text-shadow:0 1px 8px rgba(26,14,43,.5)}
+.tile:hover{filter:brightness(1.06)}
+.hint{font-size:13px; color:#7a6688; margin:12px 0 0}
+.lb{position:fixed; inset:0; z-index:50; background:rgba(26,14,43,.92); display:grid; place-items:center; padding:24px}
+.lb[hidden]{display:none!important}
+.lb figure{margin:0; width:min(100%, 420px); text-align:center; color:var(--blush)}
+.lb .pic{aspect-ratio:4/5; border-radius:22px; display:grid; place-items:center}
+.lb .pic svg{width:34%; fill:none; stroke:#fff; stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round}
+.lb figcaption{margin-top:14px; font-family:var(--display); font-size:22px}
+.lb figcaption small{display:block; font-family:var(--body); font-size:14px; color:#d9bfd0; margin-top:4px}
+.lb .ctl{display:flex; justify-content:center; gap:10px; margin-top:16px}
+.lb button{border:0; border-radius:999px; padding:10px 18px; background:var(--blush); color:var(--ink); font-weight:600}
+
+/* rsvp */
+.rsvp{background:var(--night); color:var(--blush)}
+.rsvp h2{color:#fff}
+.rsvp .eyebrow{color:var(--gold)}
+.rsvp .lead{color:#d9bfd0}
+form{display:flex; flex-direction:column; gap:18px; margin-top:26px}
+label,.lab{display:flex; flex-direction:column; gap:6px; font-size:13px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#d9bfd0}
+input[type=text],textarea{
+  font:inherit; font-size:16px; letter-spacing:0; text-transform:none; color:var(--ink); background:var(--paper);
+  border:0; border-radius:14px; padding:13px 14px; width:100%; min-width:0;
+}
+textarea{min-height:88px; resize:vertical}
+.seg{display:flex; gap:8px; flex-wrap:wrap}
+.seg button{
+  border:0; border-radius:999px; padding:11px 18px; background:var(--plum); color:var(--blush); font-weight:600; font-size:15px;
+  letter-spacing:0; text-transform:none;
+}
+.seg button[aria-pressed="true"]{background:var(--gold); color:var(--ink)}
+.step{display:flex; align-items:center; gap:14px}
+.step button{width:44px; height:44px; border:0; border-radius:50%; background:var(--plum); color:var(--blush); font-size:22px; line-height:1}
+.step output{min-width:2ch; text-align:center; font-family:var(--display); font-size:26px; color:#fff; letter-spacing:0; text-transform:none}
+.send{border:0; border-radius:999px; padding:15px 26px; background:var(--rose); color:var(--ink); font-weight:600; font-size:16px}
+.send:hover{background:#f5a3b0}
+.err{color:#ffb3bf; font-size:14px; margin:-8px 0 0; letter-spacing:0; text-transform:none; font-weight:400}
+.thanks{margin-top:26px; padding:26px 24px; border-radius:22px; background:var(--plum); text-align:center}
+.thanks[hidden]{display:none!important}
+.thanks h3{font-size:30px; color:#fff; margin-bottom:8px}
+.thanks p{margin:0 0 16px}
+.demo{font-size:13px; color:#b79bb8; margin:0}
+
+footer{background:var(--blush); text-align:center; padding-block:34px 44px; font-size:14px; color:var(--dusk)}
+footer b{color:var(--night)}
+footer .soft{display:block; margin-top:6px; font-size:13px}
+@media (prefers-reduced-motion: reduce){ .fl{display:none} html{scroll-behavior:auto} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-umbrella" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v6a2 2 0 0 0 4 0"/><path d="M12 3V2"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 3v3M12 3v3"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M2 14l8-2-5-7 2-1 9 6 6-2c1.2-.4 2 .8 1.2 1.6L18 15l-5 6-1.5-1 1-6z" transform="translate(0 -1)"/></symbol>
+  <symbol id="i-ring" viewBox="0 0 24 24"><circle cx="12" cy="15" r="5.5"/><path d="M8.5 6.5L10 3h4l1.5 3.5L12 9.5z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.600-9 9-9 9z"/></symbol>
+</svg>
+
+<nav>
+  <div class="w">
+    <span class="mono">P &amp; A</span>
+    <div class="links">
+      <a href="#story">Our story</a><a href="#when">Events</a><a href="#moments">Moments</a><a href="#rsvp">RSVP</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="fl" style="left:8%;--dur:7s;--del:0s;--dx:20px"><svg width="22" height="22" viewBox="0 0 24 24" fill="#f08a9b"><use href="#i-heart"/></svg></span>
+  <span class="fl" style="left:24%;--dur:9s;--del:2s;--dx:-24px"><svg width="16" height="16" viewBox="0 0 24 24" fill="#ffc247"><use href="#i-heart"/></svg></span>
+  <span class="fl" style="left:46%;--dur:8s;--del:4s;--dx:18px"><svg width="26" height="26" viewBox="0 0 24 24" fill="#f08a9b"><use href="#i-heart"/></svg></span>
+  <span class="fl" style="left:68%;--dur:10s;--del:1s;--dx:-18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffc247"><use href="#i-heart"/></svg></span>
+  <span class="fl" style="left:88%;--dur:8.5s;--del:3s;--dx:-22px"><svg width="22" height="22" viewBox="0 0 24 24" fill="#f08a9b"><use href="#i-heart"/></svg></span>
+  <div class="w">
+    <svg class="umb" viewBox="0 0 150 90" aria-hidden="true">
+      <path d="M8,50 Q50,-8 92,50 Q70,42 50,50 Q28,42 8,50Z" fill="#f08a9b"/>
+      <path d="M58,50 Q100,-8 142,50 Q120,42 100,50 Q78,42 58,50Z" fill="#6b5bc4" opacity=".92"/>
+      <line x1="50" y1="48" x2="50" y2="80" stroke="#1a0e2b" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="100" y1="48" x2="100" y2="80" stroke="#1a0e2b" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <div class="eyebrow">We&rsquo;re getting married</div>
+    <h1>Priya<i>&amp;</i>Arjun</h1>
+    <div class="date">Sunday, 14 February 2027</div>
+    <div class="place">Rosewood Gardens, Chennai</div>
+    <a class="btn" href="#story">Open our invite</a>
+  </div>
+</header>
+
+<div class="count">
+  <div class="w">
+    <div class="eyebrow" id="cdLabel">Counting down to the big day</div>
+    <div class="cd" role="timer" aria-live="off">
+      <div><b id="cdD">--</b><span>Days</span></div>
+      <div><b id="cdH">--</b><span>Hours</span></div>
+      <div><b id="cdM">--</b><span>Mins</span></div>
+      <div><b id="cdS">--</b><span>Secs</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="story">
+  <div class="w">
+    <div class="eyebrow">Our story</div>
+    <h2>It was pouring in Chennai</h2>
+    <p class="lead">Two strangers, two umbrellas, and a book that hit the pavement. Here is how it went from there.</p>
+    <ol class="tl">
+      <li><div class="ic"><svg><use href="#i-umbrella"/></svg></div><div><time>July 2019</time><h3>Two umbrellas</h3><p>A monsoon evening, a crowded street, and two umbrellas that bumped right into each other.</p></div></li>
+      <li><div class="ic"><svg><use href="#i-book"/></svg></div><div><time>Same evening</time><h3>A dropped book</h3><p>Priya&rsquo;s book fell. Arjun picked it up, and then he held his umbrella over both of them.</p></div></li>
+      <li><div class="ic"><svg><use href="#i-cup"/></svg></div><div><time>Still July 2019</time><h3>One cup of coffee</h3><p>It was meant to be quick. They talked for five hours until the cafe turned the lights down.</p></div></li>
+      <li><div class="ic"><svg><use href="#i-plane"/></svg></div><div><time>2022</time><h3>First trip together</h3><p>Their first trip together, on a flight Arjun is still convinced he booked first.</p></div></li>
+      <li><div class="ic"><svg><use href="#i-ring"/></svg></div><div><time>2025</time><h3>He asked, she said yes</h3><p>Under a borrowed umbrella, of course. Now we&rsquo;d love you to be there for the rest.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="when" class="when">
+  <div class="w">
+    <div class="eyebrow">Events</div>
+    <h2>Four days of celebrating</h2>
+    <div class="tabs" role="tablist" aria-label="Events" id="tabs"></div>
+    <div class="card" id="evCard" role="tabpanel" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="moments">
+  <div class="w">
+    <div class="eyebrow">Moments</div>
+    <h2>Little scenes from us</h2>
+    <div class="grid" id="grid"></div>
+    <p class="hint">Sample illustrations. Your own photos go here.</p>
+  </div>
+</section>
+
+<section id="rsvp" class="rsvp">
+  <div class="w">
+    <div class="eyebrow">RSVP</div>
+    <h2>Will you join us?</h2>
+    <p class="lead">Please reply by 1 January 2027 so we can save you a seat.</p>
+
+    <form id="form" novalidate>
+      <label for="name">Your name<input id="name" type="text" autocomplete="name" placeholder="Full name"></label>
+      <p class="err" id="nameErr" hidden>Please add your name so we know who is replying.</p>
+      <div class="lab" id="attLab">Can you make it?
+        <div class="seg" role="group" aria-labelledby="attLab">
+          <button type="button" data-att="yes" aria-pressed="true">Yes, I&rsquo;ll be there</button>
+          <button type="button" data-att="no" aria-pressed="false">Sadly, no</button>
+        </div>
+      </div>
+      <div class="lab" id="guestBox">Guests including you
+        <div class="step">
+          <button type="button" id="minus" aria-label="One fewer guest">&minus;</button>
+          <output id="guests" for="minus plus">1</output>
+          <button type="button" id="plus" aria-label="One more guest">+</button>
+        </div>
+      </div>
+      <div class="lab" id="mealLab">Food
+        <div class="seg" role="group" aria-labelledby="mealLab" id="meal">
+          <button type="button" data-meal="Vegetarian" aria-pressed="true">Vegetarian</button>
+          <button type="button" data-meal="Non-vegetarian" aria-pressed="false">Non-vegetarian</button>
+          <button type="button" data-meal="Vegan" aria-pressed="false">Vegan</button>
+        </div>
+      </div>
+      <label for="msg">A note for the couple<textarea id="msg" placeholder="Wishes, song requests, anything you like"></textarea></label>
+      <button class="send" type="submit">Send my RSVP</button>
+      <p class="demo">This is a sample invite. Nothing you enter here is sent or stored.</p>
+    </form>
+
+    <div class="thanks" id="thanks" hidden>
+      <h3 id="thanksH">Thank you!</h3>
+      <p id="thanksP"></p>
+      <button class="btn ghost" id="edit" type="button" style="color:var(--blush); box-shadow:inset 0 0 0 2px var(--blush); background:transparent">Change my reply</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="w">
+    Priya &amp; Arjun &middot; 14.02.2027
+    <span class="soft">made with <b>iloveeefriez</b></span>
+  </div>
+</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <figure>
+    <div class="pic" id="lbPic"><svg id="lbSvg"><use id="lbUse" href="#i-heart"/></svg></div>
+    <figcaption id="lbCap"></figcaption>
+    <div class="ctl"><button type="button" id="lbPrev">Back</button><button type="button" id="lbNext">Next</button><button type="button" id="lbClose">Close</button></div>
+  </figure>
+</div>
+
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  /* countdown */
+  var target = new Date('2027-02-14T10:00:00+05:30').getTime();
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function tick(){
+    var d = target - Date.now();
+    if (d <= 0){ $('cdLabel').textContent = 'Today is the day'; ['cdD','cdH','cdM','cdS'].forEach(function(i){ $(i).textContent = '00'; }); return; }
+    var s = Math.floor(d / 1000);
+    $('cdD').textContent = Math.floor(s / 86400);
+    $('cdH').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('cdM').textContent = pad(Math.floor(s % 3600 / 60));
+    $('cdS').textContent = pad(s % 60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* events */
+  var EVENTS = [
+    {k:'Mehendi', t:'Mehendi', start:'2027-02-12T16:00:00+05:30', end:'2027-02-12T20:00:00+05:30', day:'Friday, 12 February', time:'4:00 pm', venue:'Rosewood Gardens, courtyard', dress:'Bright and breezy', note:'Henna artists, chaat and a lot of sitting around. Wear something you do not mind getting a little colourful.'},
+    {k:'Sangeet', t:'Sangeet', start:'2027-02-13T19:00:00+05:30', end:'2027-02-13T23:30:00+05:30', day:'Saturday, 13 February', time:'7:00 pm', venue:'Rosewood Gardens, main lawn', dress:'Sparkle and jewel tones', note:'Performances by both families, then the floor is yours. Our dance rehearsals have been going badly, so please be kind.'},
+    {k:'Wedding', t:'The wedding', start:'2027-02-14T10:00:00+05:30', end:'2027-02-14T14:00:00+05:30', day:'Sunday, 14 February', time:'10:00 am', venue:'Rosewood Gardens, garden mandap', dress:'Traditional, soft pastels', note:'The ceremony begins at the muhurtham, followed by lunch. Please arrive by 9:30 am.'},
+    {k:'Reception', t:'Reception', start:'2027-02-14T19:00:00+05:30', end:'2027-02-14T23:00:00+05:30', day:'Sunday, 14 February', time:'7:00 pm', venue:'Rosewood Gardens, ballroom', dress:'Evening formal', note:'Dinner, speeches and a first dance that has been rehearsed more than the Sangeet one.'}
+  ];
+  var tabs = $('tabs'), card = $('evCard');
+  function utc(iso){ return new Date(iso).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); }
+  function showEvent(i){
+    var e = EVENTS[i];
+    [].forEach.call(tabs.children, function(b, j){ b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
+    var cal = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Priya & Arjun: ' + e.t) +
+      '&dates=' + utc(e.start) + '/' + utc(e.end) + '&location=' + encodeURIComponent(e.venue + ', Chennai');
+    var map = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Rosewood Gardens Chennai');
+    card.innerHTML = '<h3>' + e.t + '</h3><div class="when-line">' + e.day + ' &middot; ' + e.time + '</div>' +
+      '<dl class="facts"><dt>Where</dt><dd>' + e.venue + '</dd><dt>Wear</dt><dd>' + e.dress + '</dd></dl>' +
+      '<p style="margin:0 0 22px">' + e.note + '</p>' +
+      '<div class="actions"><a class="btn" href="' + cal + '" target="_blank" rel="noopener">Add to calendar</a><a class="btn ghost" href="' + map + '" target="_blank" rel="noopener">See map</a></div>';
+  }
+  EVENTS.forEach(function(e, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = e.k;
+    b.addEventListener('click', function(){ showEvent(i); });
+    b.addEventListener('keydown', function(ev){
+      var n = ev.key === 'ArrowRight' ? i + 1 : ev.key === 'ArrowLeft' ? i - 1 : null;
+      if (n === null) return;
+      n = (n + EVENTS.length) % EVENTS.length; showEvent(n); tabs.children[n].focus();
+    });
+    tabs.appendChild(b);
+  });
+  showEvent(2);
+
+  /* moments + lightbox */
+  var MOMENTS = [
+    {i:'umbrella', c:'Two umbrellas', s:'July 2019, Chennai', g:'linear-gradient(160deg,#3a1b5a,#a24f78)'},
+    {i:'book',     c:'The dropped book', s:'The same evening', g:'radial-gradient(circle at 30% 25%,#ffb7a8,#c9667f)'},
+    {i:'cup',      c:'One cup of coffee', s:'Five hours later', g:'linear-gradient(200deg,#8a4570,#3a1b2e)'},
+    {i:'plane',    c:'First trip', s:'2022', g:'radial-gradient(circle at 70% 30%,#8fd0d4,#2f8189)'},
+    {i:'ring',     c:'The question', s:'2025', g:'radial-gradient(circle at 40% 30%,#ffe19a,#e29a2c)'},
+    {i:'heart',    c:'Forever, starting now', s:'14 February 2027', g:'linear-gradient(20deg,#f08a9b,#6b5bc4)'}
+  ];
+  var grid = $('grid'), cur = 0;
+  MOMENTS.forEach(function(m, n){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'tile'; b.style.background = m.g; b.setAttribute('aria-label', 'Open ' + m.c);
+    b.innerHTML = '<svg class="glyph" viewBox="0 0 24 24"><use href="#i-' + m.i + '"/></svg><span>' + m.c + '</span>';
+    b.addEventListener('click', function(){ openLb(n); });
+    grid.appendChild(b);
+  });
+  var lb = $('lb'), opener = null;
+  function paint(){
+    var m = MOMENTS[cur];
+    $('lbPic').style.background = m.g;
+    $('lbUse').setAttribute('href', '#i-' + m.i);
+    $('lbSvg').setAttribute('viewBox', '0 0 24 24');
+    $('lbCap').innerHTML = m.c + '<small>' + m.s + '</small>';
+  }
+  function openLb(n){ opener = document.activeElement; cur = n; paint(); lb.hidden = false; $('lbClose').focus(); }
+  function closeLb(){ lb.hidden = true; if (opener) opener.focus(); }
+  $('lbPrev').addEventListener('click', function(){ cur = (cur + MOMENTS.length - 1) % MOMENTS.length; paint(); });
+  $('lbNext').addEventListener('click', function(){ cur = (cur + 1) % MOMENTS.length; paint(); });
+  $('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function(e){ if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function(e){
+    if (lb.hidden) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowRight') $('lbNext').click();
+    if (e.key === 'ArrowLeft') $('lbPrev').click();
+  });
+
+  /* rsvp */
+  var att = 'yes', guests = 1, meal = 'Vegetarian';
+  function pressGroup(sel, attr, val){
+    document.querySelectorAll(sel).forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute(attr) === val ? 'true' : 'false'); });
+  }
+  document.querySelectorAll('[data-att]').forEach(function(b){
+    b.addEventListener('click', function(){
+      att = b.getAttribute('data-att'); pressGroup('[data-att]', 'data-att', att);
+      $('guestBox').hidden = $('mealLab').hidden = att === 'no';
+    });
+  });
+  document.querySelectorAll('[data-meal]').forEach(function(b){
+    b.addEventListener('click', function(){ meal = b.getAttribute('data-meal'); pressGroup('[data-meal]', 'data-meal', meal); });
+  });
+  $('minus').addEventListener('click', function(){ guests = Math.max(1, guests - 1); $('guests').textContent = guests; });
+  $('plus').addEventListener('click', function(){ guests = Math.min(6, guests + 1); $('guests').textContent = guests; });
+  $('form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = $('name').value.trim();
+    $('nameErr').hidden = !!name;
+    if (!name){ $('name').focus(); return; }
+    var first = name.split(' ')[0];
+    if (att === 'yes'){
+      $('thanksH').textContent = 'See you there, ' + first + '!';
+      $('thanksP').textContent = guests + (guests === 1 ? ' seat' : ' seats') + ' saved for you, ' + meal.toLowerCase() + ' meals. We cannot wait to celebrate with you.';
+    } else {
+      $('thanksH').textContent = 'We will miss you, ' + first;
+      $('thanksP').textContent = 'Thank you for letting us know. We will be thinking of you on the day.';
+    }
+    $('form').hidden = true; $('thanks').hidden = false;
+    $('thanks').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+  $('edit').addEventListener('click', function(){ $('thanks').hidden = true; $('form').hidden = false; $('name').focus(); });
+})();
+</script>
