@@ -157,7 +157,7 @@ body{
 .rsvp{padding:8cqw 6cqw 7cqw; text-align:center; background:var(--blush)}
 .rsvp p{font-size:3.1cqw; margin:0 0 4cqw}
 .foot{padding:4cqw; text-align:center; font-size:2.4cqw; color:var(--dusk); background:var(--blush)}
-.wm{top:164cqw; font-family:var(--body); font-weight:400; font-size:3.5cqw; letter-spacing:.06em; color:var(--blush)}
+.wm{top:168cqw; font-family:var(--body); font-weight:400; font-size:3.5cqw; letter-spacing:.06em; color:var(--blush)}
 .wm b{font-weight:600; color:var(--gold)}
 #sE.on .wm{animation:fadeUp .9s ease-out var(--d) both}
 #sE .cap.end{top:145cqw; font-size:6.4cqw}
@@ -181,6 +181,25 @@ body{
 .pfeat li{font-size:3cqw; line-height:1.35; padding:2.6cqw 3cqw 2.6cqw 8cqw; border-radius:2.6cqw; background:#23262c; position:relative}
 .pfeat li::before{content:""; position:absolute; left:3cqw; top:50%; width:2.4cqw; height:2.4cqw; margin-top:-1.2cqw; border-radius:50%; background:#ffc247}
 .cap.url{top:157.5cqw; font-family:var(--body); font-weight:600; font-size:3.2cqw; letter-spacing:.02em; color:#fff}
+
+
+/* ---- scene E: Evermore showcase (real product screenshots) ---- */
+#sE .cap.top{top:12cqw}
+.deck{position:absolute; left:6cqw; right:6cqw; top:42cqw; height:62cqw}
+.shot{position:absolute; left:50%; top:50%; margin:0; width:100%; opacity:0; transform:translate(-50%,-46%) scale(.94)}
+.shot img{display:block; width:100%; aspect-ratio:1.45; object-fit:cover; object-position:var(--pos,50% 50%); border-radius:3.2cqw; box-shadow:0 0 0 .4cqw rgba(255,255,255,.14)}
+.shot img.wide{aspect-ratio:auto}
+.shot figcaption{position:absolute; left:0; right:0; top:calc(100% + 3.4cqw); text-align:center; font-weight:600; font-size:4cqw; color:var(--gold)}
+#sE.on .shot{animation:card var(--len) ease-in-out var(--d) both}
+#sE.on .shot.hold{animation:cardHold .8s ease-out var(--d) both}
+@keyframes card{0%{opacity:0; transform:translate(-50%,-46%) scale(.94)} 12%{opacity:1; transform:translate(-50%,-50%) scale(1)} 88%{opacity:1; transform:translate(-50%,-50%) scale(1.03)} 100%{opacity:0; transform:translate(-50%,-53%) scale(1.04)}}
+@keyframes cardHold{from{opacity:0; transform:translate(-50%,-46%) scale(.94)} to{opacity:1; transform:translate(-50%,-50%) scale(1)}}
+.chips{position:absolute; left:6cqw; right:6cqw; top:116cqw; margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:2cqw}
+.chips li{font-size:3.3cqw; font-weight:600; color:var(--blush); padding:1.6cqw 3.6cqw; border-radius:9cqw; background:rgba(255,255,255,.1); opacity:.5}
+#sE.on .chips li{animation:chipOn .5s ease-out var(--d) both}
+@keyframes chipOn{from{opacity:.5; background:rgba(255,255,255,.1); color:#ffe1da} to{opacity:1; background:#ffc247; color:#1a0e2b}}
+#sE .cap.end{top:150cqw; font-size:6.6cqw}
+.cap.url{top:160.5cqw; font-family:var(--body); font-weight:600; font-size:3.4cqw; letter-spacing:.02em; color:#fff}
 
 /* ---- page chrome ---- */
 .bar{width:min(100%, 360px); height:3px; border-radius:3px; background:#3a2455; overflow:hidden}
@@ -307,30 +326,22 @@ body{
 
   <!-- E: the website -->
   <section class="scene" id="sE">
-    <div class="cap top" style="--d:.2s">Now turn your story<br>into a website.</div>
-    <div class="phone" aria-hidden="true">
-      <div class="screen" style="background:#16181c"><div class="page pp">
-          <div class="pcover"><div class="pc1">Evermore</div><div class="pc2">A love story, built page by page.</div><div class="pc3"><b>7</b> yrs <b>3</b> mo <b>9</b> d together</div></div>
-          <div class="pbody">
-            <h4>Anniversary website</h4>
-            <div class="pprice"><s>&#8377;499</s><b>&#8377;199</b></div>
-            <div class="pbtn">Get it now</div>
-            <p class="pdesc">Build it step by step, watch it come to life in a live phone preview, then share your own link.</p>
-            <ul class="pfeat">
-              <li>Their name on the cover, with a live &ldquo;together for&rdquo; counter</li>
-              <li>Your story as a timeline, with photos</li>
-              <li>A photo wall of polaroids they can drag around</li>
-              <li>Memory match, quiz and scratch card games</li>
-              <li>A love letter that types itself out</li>
-              <li>Music, a password and six colour palettes</li>
-            </ul>
-            <div class="pbtn alt">Get it now</div>
-          </div>
-        </div></div>
+    <div class="cap top" style="--d:.2s">Turn your story<br>into a website.</div>
+    <div class="deck">
+      <figure class="shot" style="--d:0.7s;--len:3.4s"><img class="wide" src="assets/ev-cover.jpg" alt=""><figcaption>Meet Evermore</figcaption></figure>
+      <figure class="shot" style="--d:3.9s;--len:1.9s"><img src="assets/ev-timeline.jpg" alt="" ><figcaption>Your story, as a timeline</figcaption></figure>
+      <figure class="shot" style="--d:5.6s;--len:1.9s"><img src="assets/ev-polaroids.jpg" alt="" ><figcaption>A wall of polaroids to drag around</figcaption></figure>
+      <figure class="shot" style="--d:7.3s;--len:1.7s"><img src="assets/ev-quiz.jpg" alt="" ><figcaption>A quiz: how well do you know us?</figcaption></figure>
+      <figure class="shot" style="--d:8.8s;--len:1.7s"><img src="assets/ev-jar.jpg" alt="" ><figcaption>A jar of reasons you love them</figcaption></figure>
+      <figure class="shot" style="--d:10.3s;--len:1.7s"><img src="assets/ev-scratch.jpg" alt="" ><figcaption>A scratch card with a hidden message</figcaption></figure>
+      <figure class="shot" style="--d:11.8s;--len:1.7s"><img src="assets/ev-coupons.jpg" alt="" ><figcaption>Redeemable love coupons</figcaption></figure>
+      <figure class="shot" style="--d:13.3s;--len:1.7s"><img src="assets/ev-hearts.jpg" alt="" ><figcaption>A heart-catching game</figcaption></figure>
+      <figure class="shot hold" style="--d:14.8s"><img src="assets/ev-intro.jpg" alt="" style="--pos:50% 50%"><figcaption>Their name, big on the cover</figcaption></figure>
     </div>
+    <ul class="chips" aria-hidden="true"><li style="--d:3.9s">Story timeline</li><li style="--d:5.6s">Polaroid photo wall</li><li style="--d:7.3s">Quiz</li><li style="--d:8.8s">Reasons jar</li><li style="--d:10.3s">Scratch card</li><li style="--d:11.8s">Love coupons</li><li style="--d:13.3s">Catch hearts</li></ul>
+    <div class="cap end" style="--d:16.8s">Make yours today.</div>
+    <div class="cap url" style="--d:17.6s">Link in bio</div>
     <div class="cap wm" style="--d:5.2s">made with <b>iloveeefriez</b></div>
-    <div class="cap end" style="--d:6s">Make yours today.</div>
-    <div class="cap url" style="--d:6.8s">Link in bio</div>
   </section>
 
   <div class="start" id="start" hidden><button class="go" id="playBtn" type="button">Play the story</button></div>
@@ -345,7 +356,7 @@ body{
     <label class="wide" for="city">City they met in<input id="city" value="Chennai" autocomplete="off"></label>
   </div>
   <button class="go" id="replay" type="button">Replay</button>
-  <p class="note">30 seconds, 9:16. Change the names, replay, then screen-record it for a Reel or Short.</p>
+  <p class="note">About 40 seconds, 9:16. Change the names, replay, then screen-record it for a Reel or Short.</p>
 </div>
 
 <script>
@@ -476,7 +487,7 @@ body{
 
   /* ---- timeline ---- */
   var stage = $('stage'), scenes = ['sA','sB','sC','sD','sE'].map($),
-      STARTS = [0, 5.5, 11, 16, 21], END = 33, raf = 0, t0 = 0, next = 0, prog = $('prog');
+      STARTS = [0, 5.5, 11, 16, 21], END = 41, raf = 0, t0 = 0, next = 0, prog = $('prog');
 
   function tick(){
     var t = (performance.now() - t0) / 1000;
@@ -493,6 +504,23 @@ body{
     stage.classList.remove('reset');
     next = 0; t0 = performance.now(); tick();
   }
+  /* Deterministic seek, used to render the video frame by frame. */
+  window.__seek = function(t){
+    cancelAnimationFrame(raf);
+    stage.classList.add('reset');
+    scenes.forEach(function(sc, i){
+      var on = t >= STARTS[i];
+      sc.classList.toggle('on', on);
+      sc.style.opacity = i === 0 ? 1 : (on ? Math.min(1, (t - STARTS[i]) / 0.7) : 0);
+    });
+    void stage.offsetWidth;
+    document.getAnimations().forEach(function(a){
+      var el = a.effect && a.effect.target, sc = el && el.closest ? el.closest('.scene') : null, i = sc ? scenes.indexOf(sc) : -1;
+      if (i < 0) return;
+      a.pause(); a.currentTime = Math.max(0, (t - STARTS[i]) * 1000);
+    });
+  };
+
   $('replay').addEventListener('click', play);
   $('playBtn').addEventListener('click', play);
 
