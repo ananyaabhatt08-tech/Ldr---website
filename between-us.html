@@ -1,0 +1,610 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Between Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: airmail envelope. Striped border on top, a postage stamp for the countdown,
+   tabbed shared journal below. Notes are letters, handwritten, mine on the right. */
+:root{
+  --bg:#eef2f7; --card:#fbfcfe; --ink:#17233f; --muted:#5b6783; --line:#cfd8e6;
+  --red:#c8372f; --blue:#2a58a8; --btn:#2a58a8; --btn-ink:#fff; --mine:#e3ebf8; --soft:#e4eaf3;
+  --w1:#b8322b; --w2:#27529c; --w3:#8a5a12; --w4:#1b6b60;
+  --display:"Instrument Serif",Georgia,serif; --body:"Hanken Grotesk",system-ui,sans-serif;
+  --hand:"Caveat","Segoe Script",cursive; --mono:"DM Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1628; --card:#17213a; --ink:#e8edf8; --muted:#9fabc6; --line:#2b3857;
+  --red:#ef6b62; --blue:#8db0f5; --btn:#3f6cc4; --mine:#1d2c4d; --soft:#1d2a47; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1628; --card:#17213a; --ink:#e8edf8; --muted:#9fabc6; --line:#2b3857;
+  --red:#ef6b62; --blue:#8db0f5; --btn:#3f6cc4; --mine:#1d2c4d; --soft:#1d2a47; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);margin:0;min-height:100vh}
+.stripe{height:12px;background:repeating-linear-gradient(135deg,var(--red) 0 16px,var(--bg) 16px 26px,var(--blue) 26px 42px,var(--bg) 42px 52px)}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:22px}
+h1{font:400 clamp(2.6rem,9vw,4.2rem)/.95 var(--display);margin:0;text-wrap:balance}
+h1 em{color:var(--red)}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+h2{font:400 1.9rem/1.1 var(--display);margin:0 0 4px;text-wrap:balance}
+h3{font:700 .8rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.lede{color:var(--muted);margin:0 0 18px;max-width:60ch}
+
+.stamp{border:2px dashed var(--red);border-radius:4px;padding:10px 14px 8px;text-align:center;min-width:170px;background:var(--card);position:relative}
+.stamp b{display:block;font:400 2.6rem/1 var(--display);color:var(--red);font-variant-numeric:tabular-nums}
+.stamp span{display:block;font:500 .7rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);overflow-wrap:anywhere}
+.stamp button{margin-top:6px}
+.visit-form{display:grid;gap:8px;margin-top:10px;text-align:left}
+
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px;padding-bottom:10px}
+nav.tabs button{background:none;border:1px solid transparent;color:var(--muted);font:500 .8rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;border-radius:999px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs button:hover:not([aria-selected="true"]){border-color:var(--line);color:var(--ink)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+section.panel[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid>.card{margin:0}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+
+input,textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:90px}
+label.f{display:grid;gap:4px;font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>input,.row>select{flex:1 1 140px}
+button.b{background:var(--btn);color:var(--btn-ink);border:0;border-radius:8px;padding:10px 16px;font:700 .95rem/1 var(--body);cursor:pointer}
+button.b:hover{filter:brightness(1.1)}
+button.b:disabled{opacity:.45;cursor:not-allowed}
+button.g{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 12px;font:500 .85rem/1 var(--body);cursor:pointer}
+button.g:hover{border-color:var(--ink)}
+button.g.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.t{background:none;border:0;color:var(--muted);font:500 .8rem/1 var(--mono);cursor:pointer;text-decoration:underline;padding:4px}
+
+.empty{border:1px dashed var(--line);border-radius:10px;padding:26px 18px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:400 1.4rem/1.2 var(--display);color:var(--ink);margin-bottom:4px}
+
+/* letters */
+.letters{display:grid;gap:14px}
+.letter{max-width:min(92%,560px);background:var(--card);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:12px 16px 10px;min-width:0}
+.letter.mine{justify-self:end;background:var(--mine);border-radius:14px 4px 14px 14px}
+.letter .meta{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;font:500 .7rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.letter p{font:700 1.45rem/1.25 var(--hand);margin:6px 0 2px;white-space:pre-wrap;overflow-wrap:anywhere}
+.mood{color:var(--red)}
+
+/* movies */
+.film{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.film:first-child{border-top:0}
+.film .t1{font:400 1.35rem/1.15 var(--display);overflow-wrap:anywhere}
+.film .sub{font:500 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.film .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pick{font:400 2rem/1.1 var(--display);color:var(--red);margin:8px 0 0;overflow-wrap:anywhere}
+.stars{display:flex;gap:4px}
+.stars button{width:34px;height:34px;padding:0}
+
+/* wheel */
+.wheelbox{display:grid;justify-items:center;gap:14px}
+.wheelwrap{position:relative;width:min(100%,360px);aspect-ratio:1}
+.wheelwrap canvas{width:100%;height:100%;display:block}
+.wheelwrap::after{content:"";position:absolute;left:50%;top:-4px;transform:translateX(-50%);border:11px solid transparent;border-top:22px solid var(--ink);border-bottom:0}
+.result{font:400 2rem/1.1 var(--display);text-align:center;min-height:2.3rem;overflow-wrap:anywhere}
+.result small{display:block;font:500 .72rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* games */
+.board{display:grid;grid-template-columns:repeat(3,76px);gap:6px;justify-content:center;margin:12px 0}
+.board button{width:76px;height:76px;background:var(--bg);border:1px solid var(--line);border-radius:8px;font:400 2.6rem/1 var(--display);color:var(--ink);cursor:pointer}
+.board button.x{color:var(--red)} .board button.o{color:var(--blue)}
+.board button:disabled{cursor:default}
+.board button.win{background:var(--soft);border-color:var(--ink)}
+.status{text-align:center;font:500 .85rem/1.4 var(--mono);color:var(--muted);min-height:2.4em}
+.wyr{display:grid;gap:10px;margin:12px 0}
+.wyr button{text-align:left;padding:14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:400 1.15rem/1.3 var(--display);cursor:pointer}
+.wyr button.sel{border-color:var(--ink);background:var(--soft)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{font:500 .7rem/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:5px 8px;color:var(--muted)}
+.verdict{font:400 1.2rem/1.3 var(--display);color:var(--red);margin-top:8px}
+
+/* decisions */
+.dec{border-top:1px solid var(--line);padding:14px 0}
+.dec:first-child{border-top:0}
+.dec .q{font:400 1.45rem/1.15 var(--display);margin:0 0 8px;overflow-wrap:anywhere}
+.opts{display:grid;gap:6px}
+.opts button{text-align:left;display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:10px 12px;font:500 1rem/1.3 var(--body);cursor:pointer}
+.opts button.mine{border-color:var(--ink);background:var(--soft)}
+.opts button.lead{border-color:var(--red)}
+
+.notice{border:1px solid var(--line);border-left:4px solid var(--red);background:var(--card);padding:12px 14px;border-radius:6px;margin-bottom:16px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.9rem;z-index:20;max-width:90vw}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="stripe"></div>
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">A shared journal for two</p>
+      <h1>Between <em>Us</em></h1>
+    </div>
+    <div class="stamp" id="stamp">
+      <b id="stamp-n">–</b>
+      <span id="stamp-l">Next time we meet</span>
+      <button class="t" id="stamp-edit" type="button">Set the date</button>
+      <form class="visit-form" id="visit-form" hidden>
+        <label class="f" for="v-label">What are we counting to?<input id="v-label" maxlength="50" placeholder="Our reunion"></label>
+        <label class="f" for="v-date">Date<input id="v-date" type="date"></label>
+        <label class="f" for="v-since">Together since (optional)<input id="v-since" type="date"></label>
+        <div class="row"><button class="b" type="submit">Save</button><button class="t" id="v-cancel" type="button">Cancel</button></div>
+      </form>
+    </div>
+  </header>
+
+  <div id="notice" class="notice" hidden></div>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="notes" type="button">Notes</button>
+    <button role="tab" data-tab="movies" type="button">Movies</button>
+    <button role="tab" data-tab="spin" type="button">Spin</button>
+    <button role="tab" data-tab="games" type="button">Games</button>
+    <button role="tab" data-tab="decide" type="button">Decide</button>
+  </nav>
+
+  <!-- NOTES -->
+  <section class="panel" id="p-notes" data-panel="notes">
+    <h2>Leave a note</h2>
+    <p class="lede">Write something for when they wake up, or for after a rough day. They see it as soon as they open this page.</p>
+    <form class="card" id="note-form">
+      <label class="f" for="note-text">Your note<textarea id="note-text" maxlength="1200" placeholder="Today I thought of you when…"></textarea></label>
+      <div class="row" style="margin-top:10px">
+        <select id="note-mood" aria-label="Mood" style="flex:0 1 190px">
+          <option value="">No mood</option><option>missing you</option><option>thinking of you</option><option>happy</option><option>proud of you</option><option>tired</option><option>need a call</option><option>grateful</option>
+        </select>
+        <button class="g" id="note-prompt" type="button">Give me a prompt</button>
+        <button class="b" type="submit" style="margin-left:auto">Send note</button>
+      </div>
+    </form>
+    <div class="letters" id="note-list"></div>
+  </section>
+
+  <!-- MOVIES -->
+  <section class="panel" id="p-movies" data-panel="movies" hidden>
+    <h2>Watch together</h2>
+    <p class="lede">Build a list you both add to. Press play at the same moment on a call, or use any watch-party tool you like.</p>
+    <div class="grid">
+      <form class="card" id="movie-form">
+        <h3>Add to the list</h3>
+        <label class="f" for="m-title">Title<input id="m-title" maxlength="90" placeholder="Before Sunrise"></label>
+        <div class="row" style="margin-top:10px">
+          <select id="m-kind" aria-label="Type"><option>Movie</option><option>Series</option><option>Documentary</option><option>Anime</option></select>
+          <button class="b" type="submit">Add</button>
+        </div>
+      </form>
+      <div class="card">
+        <h3>Tonight's pick</h3>
+        <button class="g" id="m-pick" type="button">Choose for us</button>
+        <div class="pick" id="m-picked">–</div>
+        <div class="sub" id="m-picked-why" style="font:500 .72rem/1.3 var(--mono);color:var(--muted);margin-top:6px"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>Want to watch</h3><div id="m-todo"></div></div>
+    <div class="card"><h3>Watched</h3><div id="m-done"></div></div>
+  </section>
+
+  <!-- SPIN -->
+  <section class="panel" id="p-spin" data-panel="spin" hidden>
+    <h2>Spin for a date</h2>
+    <p class="lede">Either of you can spin. The wheel turns on both screens and lands on the same answer.</p>
+    <div class="card">
+      <div class="row" id="wheel-tabs" style="margin-bottom:14px"></div>
+      <div class="wheelbox">
+        <div class="wheelwrap"><canvas id="wheel" width="720" height="720" aria-label="Spinner wheel"></canvas></div>
+        <button class="b" id="spin-btn" type="button">Spin</button>
+        <div class="result" id="spin-result" aria-live="polite"></div>
+      </div>
+    </div>
+    <form class="card" id="ours-form" hidden>
+      <h3>Our own wheel</h3>
+      <label class="f" for="ours-text">One option per line (2 to 12)<textarea id="ours-text" maxlength="600" placeholder="Pizza night&#10;Sunset walk on call&#10;Truth or dare"></textarea></label>
+      <div class="row" style="margin-top:10px"><button class="b" type="submit">Save wheel</button></div>
+    </form>
+  </section>
+
+  <!-- GAMES -->
+  <section class="panel" id="p-games" data-panel="games" hidden>
+    <h2>Play something</h2>
+    <p class="lede">Both of you open this page, pick a seat, and take turns. Moves show up live.</p>
+    <div class="grid">
+      <div class="card" id="ttt"></div>
+      <div class="card" id="wyr"></div>
+    </div>
+  </section>
+
+  <!-- DECIDE -->
+  <section class="panel" id="p-decide" data-panel="decide" hidden>
+    <h2>Decide together</h2>
+    <p class="lede">Where to go next, which weekend to book, what to name the plant. Add the options, vote, and see where you agree.</p>
+    <form class="card" id="dec-form">
+      <label class="f" for="d-q">The question<input id="d-q" maxlength="120" placeholder="Where should we meet in March?"></label>
+      <label class="f" for="d-opts" style="margin-top:10px">Options, one per line (2 to 6)<textarea id="d-opts" maxlength="500" placeholder="Lisbon&#10;Kyoto&#10;Halfway: Dubai"></textarea></label>
+      <div class="row" style="margin-top:10px"><button class="b" type="submit">Start vote</button></div>
+    </form>
+    <div class="card" id="dec-list"></div>
+  </section>
+</div>
+<div class="stripe"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const $ = s => document.querySelector(s);
+function h(tag, props, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(props || {})) {
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v === true) e.setAttribute(k, '');
+    else if (v !== false && v != null) e.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) { if (c == null || c === false) continue; e.append(c.nodeType ? c : document.createTextNode(c)); }
+  return e;
+}
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const fmt = t => new Date(t).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+
+let db = null, userNs = null, uid = null;
+const S = {notes:[], movies:[], decisions:[], ttt:null, wyr:null, ours:null, spin:null, visit:null};
+const names = {};
+const seen = new Set();
+
+const PROMPTS = [
+  'The best part of my day was…', 'Something small that made me think of you…', 'I am looking forward to…',
+  'One thing I want us to do when we are together…', 'Something I am proud of this week…',
+  'A memory of us that I replay…', 'Right now I wish you were here because…', 'Something I never told you about…'
+];
+const WYR = [
+  ['Always be 10 minutes early', 'Always be 10 minutes late'], ['Live by the sea together', 'Live in the mountains together'],
+  ['Only text for a month', 'Only call for a month'], ['A surprise visit tomorrow', 'A planned trip in a month'],
+  ['Cook every meal together', 'Eat out every meal together'], ['Never see snow again', 'Never see the sun set again'],
+  ['Travel the world for a year', 'Build our dream home in one'], ['Rewatch one favorite show forever', 'Never rewatch anything'],
+  ['Write each other letters', 'Send each other voice notes'], ['Know the date we live together', 'Be surprised by it'],
+  ['Our own tiny café', 'Our own tiny bookshop'], ['A dog together', 'A cat together'],
+  ['Matching pajamas, always', 'Matching sneakers, always'], ['Karaoke night', 'Board game night'],
+  ['Breakfast in bed every Sunday', 'Dinner out every Friday'], ['A road trip with no plan', 'A trip planned to the minute']
+];
+const WHEELS = {
+  date: {label:'Date night', items:['Cook the same recipe on video','Watch a movie in sync','Co-op game night','Virtual museum tour','Order takeout for each other','Stargaze on call','Online jigsaw puzzle','Write letters to open later','Walk and talk','Build a shared playlist']},
+  genre: {label:'Genre', items:['Comedy','Thriller','Romance','Sci-fi','Animation','Documentary','Drama','Horror']},
+  list: {label:'Our watchlist', items:null},
+  yesno: {label:'Yes or no', items:['Yes','No','Ask me nicely','Sleep on it']},
+  ours: {label:'Our own', items:null}
+};
+
+function nameOf(id){ return id === uid ? 'You' : (names[id] || 'Your person'); }
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3200); }
+async function write(fn){
+  try { await fn(); return true; }
+  catch (e) { toast(e && e.code === 'quota_exceeded' ? 'The journal is full. Delete something old first.' : 'Could not save that. Check you were invited as an editor or contributor.'); return false; }
+}
+function empty(title, text){ return h('div', {class:'empty'}, h('b', null, title), text); }
+
+/* ---- tabs ---- */
+function showTab(name){
+  if (!document.querySelector('[data-panel="' + name + '"]')) name = 'notes';
+  document.querySelectorAll('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== name);
+  document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  if (name === 'spin') drawWheel(rot);
+}
+document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => { showTab(b.dataset.tab); try { history.replaceState(null, '', '#' + b.dataset.tab); } catch {} }));
+
+/* ---- countdown stamp ---- */
+function renderStamp(){
+  const v = S.visit, n = $('#stamp-n'), l = $('#stamp-l');
+  if (!v || !v.date) { n.textContent = '–'; l.textContent = 'Next time we meet'; return; }
+  const days = Math.ceil((new Date(v.date + 'T00:00:00') - new Date()) / 864e5);
+  n.textContent = days > 0 ? days : (days === 0 ? 'Today' : 'Here');
+  l.textContent = (days > 0 ? (days === 1 ? 'day until ' : 'days until ') : '') + (v.label || 'we meet') + (v.since ? ' · together ' + Math.max(0, Math.floor((Date.now() - new Date(v.since + 'T00:00:00')) / 864e5)) + ' days' : '');
+}
+$('#stamp-edit').addEventListener('click', () => {
+  const v = S.visit || {};
+  $('#v-label').value = v.label || ''; $('#v-date').value = v.date || ''; $('#v-since').value = v.since || '';
+  $('#visit-form').hidden = false; $('#stamp-edit').hidden = true;
+});
+$('#v-cancel').addEventListener('click', () => { $('#visit-form').hidden = true; $('#stamp-edit').hidden = false; });
+$('#visit-form').addEventListener('submit', async e => {
+  e.preventDefault(); if (!db) return;
+  const ok = await write(() => db.doc('meta/visit').set({label: $('#v-label').value.trim(), date: $('#v-date').value, since: $('#v-since').value}));
+  if (ok) { $('#visit-form').hidden = true; $('#stamp-edit').hidden = false; }
+});
+
+/* ---- notes ---- */
+$('#note-prompt').addEventListener('click', () => { const t = $('#note-text'); if (!t.value.trim()) t.value = pick(PROMPTS) + ' '; t.focus(); });
+$('#note-form').addEventListener('submit', async e => {
+  e.preventDefault(); if (!db) return;
+  const text = $('#note-text').value.trim(); if (!text) return;
+  const ok = await write(() => db.collection('notes').add({text, mood: $('#note-mood').value, by: uid, at: Date.now()}));
+  if (ok) { $('#note-text').value = ''; $('#note-mood').value = ''; }
+});
+function renderNotes(){
+  const box = $('#note-list'); box.replaceChildren();
+  if (!S.notes.length) { box.append(empty('No notes yet', 'Write the first one above. Your person will see it when they open this page.')); return; }
+  for (const n of S.notes) {
+    const mine = n.by === uid;
+    box.append(h('article', {class: 'letter' + (mine ? ' mine' : '')},
+      h('div', {class:'meta'}, h('span', null, nameOf(n.by), n.mood ? ' · ' : '', n.mood ? h('span', {class:'mood'}, n.mood) : null), h('span', null, fmt(n.at))),
+      h('p', null, n.text),
+      mine ? h('button', {class:'t', type:'button', onclick: () => write(() => db.doc('notes/' + n.id).delete())}, 'Delete') : null));
+  }
+}
+
+/* ---- movies ---- */
+$('#movie-form').addEventListener('submit', async e => {
+  e.preventDefault(); if (!db) return;
+  const title = $('#m-title').value.trim(); if (!title) return;
+  const ok = await write(() => db.collection('movies').add({title, kind: $('#m-kind').value, by: uid, at: Date.now(), likes: {}, watched: false, ratings: {}}));
+  if (ok) $('#m-title').value = '';
+});
+const likedBy = m => Object.keys(m.likes || {}).filter(k => m.likes[k]);
+function renderMovies(){
+  const todo = S.movies.filter(m => !m.watched), done = S.movies.filter(m => m.watched);
+  const tb = $('#m-todo'), db_ = $('#m-done'); tb.replaceChildren(); db_.replaceChildren();
+  if (!todo.length) tb.append(empty('The list is empty', 'Add a movie or series you both want to see.'));
+  for (const m of todo) {
+    const l = likedBy(m), im = l.includes(uid);
+    tb.append(h('div', {class:'film'},
+      h('div', null, h('div', {class:'t1'}, m.title),
+        h('div', {class:'sub'}, m.kind + ' · added by ' + nameOf(m.by)),
+        l.length ? h('div', {class:'chips'}, l.map(id => h('span', {class:'chip'}, nameOf(id) + (id === uid ? "'re in" : ' is in')))) : null),
+      h('div', {class:'acts'},
+        h('button', {class:'g' + (im ? ' on' : ''), type:'button', onclick: () => write(() => db.doc('movies/' + m.id).update({likes: {[uid]: !im}}))}, im ? "I'm in" : 'Count me in'),
+        h('button', {class:'g', type:'button', onclick: () => write(() => db.doc('movies/' + m.id).update({watched: true, watchedAt: Date.now()}))}, 'Watched'),
+        m.by === uid ? h('button', {class:'t', type:'button', onclick: () => write(() => db.doc('movies/' + m.id).delete())}, 'Remove') : null)));
+  }
+  if (!done.length) db_.append(empty('Nothing watched yet', 'Mark a title as watched and rate it.'));
+  for (const m of done) {
+    const r = m.ratings || {}, mine = r[uid] || 0;
+    db_.append(h('div', {class:'film'},
+      h('div', null, h('div', {class:'t1'}, m.title),
+        h('div', {class:'sub'}, m.kind),
+        h('div', {class:'chips'}, Object.keys(r).filter(k => r[k]).map(id => h('span', {class:'chip'}, nameOf(id) + ': ' + r[id] + '/5')))),
+      h('div', {class:'acts'},
+        h('div', {class:'stars', role:'group', 'aria-label':'Your rating'}, [1,2,3,4,5].map(n =>
+          h('button', {class:'g' + (mine >= n ? ' on' : ''), type:'button', 'aria-label': n + ' of 5', onclick: () => write(() => db.doc('movies/' + m.id).update({ratings: {[uid]: n}}))}, String(n)))),
+        h('button', {class:'t', type:'button', onclick: () => write(() => db.doc('movies/' + m.id).update({watched: false}))}, 'Put back'))));
+  }
+}
+$('#m-pick').addEventListener('click', () => {
+  const todo = S.movies.filter(m => !m.watched);
+  if (!todo.length) { $('#m-picked').textContent = 'Add something first'; $('#m-picked-why').textContent = ''; return; }
+  const both = todo.filter(m => likedBy(m).length >= 2);
+  const pool = both.length ? both : todo;
+  $('#m-picked').textContent = pick(pool).title;
+  $('#m-picked-why').textContent = both.length ? 'Picked from titles you are both in for' : 'Picked from the whole list';
+});
+
+/* ---- wheel ---- */
+const cv = $('#wheel'), ctx = cv.getContext('2d');
+let curKey = 'date', curItems = WHEELS.date.items, rot = 0, spinning = false, lastSpinAt = 0;
+function wheelItems(key){
+  if (key === 'list') { const t = S.movies.filter(m => !m.watched).map(m => m.title.slice(0, 40)).slice(0, 12); return t.length >= 2 ? t : null; }
+  if (key === 'ours') { const t = (S.ours && S.ours.items) || []; return t.length >= 2 ? t : null; }
+  return WHEELS[key].items;
+}
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function drawWheel(r){
+  const W = cv.width, c = W / 2, R = c - 10, items = curItems || [], n = items.length;
+  ctx.clearRect(0, 0, W, W);
+  if (!n) {
+    ctx.fillStyle = cssv('--soft'); ctx.beginPath(); ctx.arc(c, c, R, 0, 7); ctx.fill();
+    ctx.fillStyle = cssv('--muted'); ctx.font = '500 30px ' + cssv('--body'); ctx.textAlign = 'center';
+    ctx.fillText('Add at least 2 options', c, c); return;
+  }
+  const seg = Math.PI * 2 / n, fills = [cssv('--w1'), cssv('--w2'), cssv('--w3'), cssv('--w4')];
+  for (let i = 0; i < n; i++) {
+    const a0 = r + i * seg - Math.PI / 2;
+    ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, R, a0, a0 + seg); ctx.closePath();
+    ctx.fillStyle = fills[(i % 4 === 0 && i === n - 1 && n % 4 === 1) ? 1 : i % 4]; ctx.fill();
+    ctx.strokeStyle = cssv('--card'); ctx.lineWidth = 4; ctx.stroke();
+    ctx.save(); ctx.translate(c, c); ctx.rotate(a0 + seg / 2); ctx.textAlign = 'right';
+    ctx.fillStyle = '#fff'; ctx.font = '700 ' + (n > 8 ? 26 : 30) + 'px ' + cssv('--body');
+    const t = items[i].length > 20 ? items[i].slice(0, 19) + '…' : items[i];
+    ctx.fillText(t, R - 24, 10); ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(c, c, 34, 0, 7); ctx.fillStyle = cssv('--card'); ctx.fill(); ctx.strokeStyle = cssv('--ink'); ctx.lineWidth = 4; ctx.stroke();
+}
+function animateTo(idx, done){
+  const n = curItems.length, seg = Math.PI * 2 / n;
+  let target = -(idx + 0.5) * seg;
+  while (target > rot - Math.PI * 8) target -= Math.PI * 2;
+  const start = rot, t0 = performance.now(), dur = 4200;
+  spinning = true; $('#spin-btn').disabled = true; $('#spin-result').replaceChildren();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const step = now => {
+    const p = reduce ? 1 : Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    rot = start + (target - start) * e; drawWheel(rot);
+    if (p < 1) requestAnimationFrame(step);
+    else { rot = target % (Math.PI * 2); spinning = false; $('#spin-btn').disabled = false; done(); }
+  };
+  requestAnimationFrame(step);
+}
+function showResult(s){
+  $('#spin-result').replaceChildren(s.items[s.idx], h('small', null, 'Spun by ' + nameOf(s.by)));
+}
+function renderWheelTabs(){
+  const box = $('#wheel-tabs'); box.replaceChildren();
+  for (const k of Object.keys(WHEELS)) box.append(h('button', {class:'g' + (k === curKey ? ' on' : ''), type:'button', disabled: spinning, onclick: () => selectWheel(k)}, WHEELS[k].label));
+  $('#ours-form').hidden = curKey !== 'ours';
+}
+function selectWheel(k){
+  curKey = k; curItems = wheelItems(k); rot = 0;
+  $('#spin-result').replaceChildren(); $('#spin-btn').disabled = !curItems;
+  renderWheelTabs(); drawWheel(rot);
+}
+$('#spin-btn').addEventListener('click', async () => {
+  if (!db || spinning || !curItems) return;
+  const idx = Math.floor(Math.random() * curItems.length), items = curItems.slice(), at = Date.now();
+  lastSpinAt = at;
+  const s = {key: curKey, items, idx, by: uid, at};
+  animateTo(idx, () => showResult(s));
+  write(() => db.doc('spin/last').set(s));
+});
+$('#ours-form').addEventListener('submit', async e => {
+  e.preventDefault(); if (!db) return;
+  const items = $('#ours-text').value.split('\n').map(x => x.trim()).filter(Boolean).slice(0, 12);
+  if (items.length < 2) { toast('Add at least two options.'); return; }
+  await write(() => db.doc('spin/ours').set({items}));
+});
+function onSpinDoc(){
+  const s = S.spin; if (!s || !s.items || s.at === lastSpinAt) return;
+  lastSpinAt = s.at;
+  if (s.by !== uid && Date.now() - s.at < 20000 && !spinning) {
+    curKey = WHEELS[s.key] ? s.key : curKey; curItems = s.items; renderWheelTabs();
+    animateTo(s.idx, () => showResult(s));
+  } else if (!spinning) { showResult(s); }
+}
+
+/* ---- games: tic-tac-toe ---- */
+const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function tttWin(b){
+  for (const l of LINES) if (b[l[0]] !== '_' && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return {w: b[l[0]], line: l};
+  return b.includes('_') ? null : {w: 'draw', line: []};
+}
+const TTT0 = {board: '_________', x: null, o: null, turn: 'x', winner: null, score: {}};
+async function tttSet(patch){ const cur = S.ttt || TTT0; await write(() => db.doc('games/ttt').set({...cur, ...patch})); }
+function renderTTT(){
+  const g = S.ttt || TTT0, box = $('#ttt'); box.replaceChildren();
+  const mySide = g.x === uid ? 'x' : (g.o === uid ? 'o' : null), over = !!g.winner;
+  const res = tttWin(g.board);
+  box.append(h('h3', null, 'Tic-tac-toe'));
+  const seats = h('div', {class:'row', style:'justify-content:center'});
+  for (const s of ['x', 'o']) {
+    const who = g[s];
+    if (who) seats.append(h('span', {class:'chip'}, s.toUpperCase() + ': ' + nameOf(who) + ' (' + ((g.score || {})[who] || 0) + ' wins)'));
+    else if (!mySide) seats.append(h('button', {class:'g', type:'button', onclick: () => tttSet({[s]: uid})}, 'Play as ' + s.toUpperCase()));
+    else seats.append(h('span', {class:'chip'}, s.toUpperCase() + ': waiting for someone'));
+  }
+  box.append(seats);
+  const board = h('div', {class:'board'});
+  for (let i = 0; i < 9; i++) {
+    const v = g.board[i], can = mySide && !over && g.turn === mySide && v === '_' && g.x && g.o;
+    board.append(h('button', {class: (v === 'x' ? 'x ' : v === 'o' ? 'o ' : '') + (res && res.line.includes(i) && over ? 'win' : ''), type:'button', disabled: !can, 'aria-label': 'Square ' + (i + 1) + (v === '_' ? '' : ', ' + v.toUpperCase()),
+      onclick: async () => {
+        const b = g.board.slice(0, i) + mySide + g.board.slice(i + 1), r = tttWin(b), score = {...(g.score || {})};
+        let winner = null;
+        if (r) { winner = r.w; if (r.w !== 'draw') score[uid] = (score[uid] || 0) + 1; }
+        await tttSet({board: b, turn: mySide === 'x' ? 'o' : 'x', winner, score});
+      }}, v === '_' ? '' : v.toUpperCase()));
+  }
+  box.append(board);
+  let msg;
+  if (!g.x || !g.o) msg = 'Both of you need a seat to start.';
+  else if (over) msg = g.winner === 'draw' ? 'A draw.' : nameOf(g[g.winner]) + (g[g.winner] === uid ? ' win!' : ' wins.');
+  else msg = !mySide ? 'Watching. Both seats are taken.' : (g.turn === mySide ? 'Your move.' : 'Waiting for ' + nameOf(g[g.turn]) + '.');
+  box.append(h('div', {class:'status'}, msg));
+  const acts = h('div', {class:'row', style:'justify-content:center'});
+  if (mySide && g.x && g.o) acts.append(h('button', {class:'g', type:'button', onclick: () => tttSet({board: '_________', winner: null, turn: g.turn === 'x' ? 'o' : 'x'})}, over ? 'Play again' : 'Restart'));
+  if (mySide) acts.append(h('button', {class:'t', type:'button', onclick: () => tttSet({[mySide]: null, board: '_________', winner: null, turn: 'x'})}, 'Leave seat'));
+  box.append(acts);
+}
+
+/* ---- games: would you rather ---- */
+async function wyrNext(){ await write(() => db.doc('games/wyr').set({i: Math.floor(Math.random() * WYR.length), answers: {}})); }
+function renderWYR(){
+  const box = $('#wyr'); box.replaceChildren(h('h3', null, 'Would you rather'));
+  const g = S.wyr;
+  if (!g) { box.append(empty('Ready when you are', 'Start a round, answer in secret, then see if you match.'), h('div', {class:'row', style:'justify-content:center;margin-top:12px'}, h('button', {class:'b', type:'button', onclick: wyrNext}, 'Start')));
+    return; }
+  const q = WYR[g.i] || WYR[0], a = g.answers || {}, mine = a[uid], ids = Object.keys(a), both = ids.length >= 2;
+  const opts = h('div', {class:'wyr'});
+  ['a', 'b'].forEach((k, j) => opts.append(h('button', {class: mine === k ? 'sel' : '', type:'button', disabled: !!mine, onclick: () => write(() => db.doc('games/wyr').update({answers: {[uid]: k}}))}, q[j])));
+  box.append(opts);
+  if (!mine) box.append(h('div', {class:'status'}, 'Pick one. Your answer stays hidden until they answer too.'));
+  else if (!both) box.append(h('div', {class:'status'}, 'Locked in. Waiting for your person.'));
+  else {
+    const vals = ids.map(id => a[id]), same = vals[0] === vals[1];
+    box.append(h('div', {class:'chips'}, ids.map(id => h('span', {class:'chip'}, nameOf(id) + ': ' + q[a[id] === 'a' ? 0 : 1]))),
+      h('div', {class:'verdict'}, same ? 'You matched.' : 'Different picks. Tell each other why.'));
+  }
+  box.append(h('div', {class:'row', style:'margin-top:12px'}, h('button', {class:'g', type:'button', onclick: wyrNext}, 'Next question')));
+}
+
+/* ---- decide ---- */
+$('#dec-form').addEventListener('submit', async e => {
+  e.preventDefault(); if (!db) return;
+  const q = $('#d-q').value.trim(), options = $('#d-opts').value.split('\n').map(x => x.trim()).filter(Boolean).slice(0, 6);
+  if (!q || options.length < 2) { toast('Add a question and at least two options.'); return; }
+  const ok = await write(() => db.collection('decisions').add({q, options, votes: {}, by: uid, at: Date.now()}));
+  if (ok) { $('#d-q').value = ''; $('#d-opts').value = ''; }
+});
+function renderDecisions(){
+  const box = $('#dec-list'); box.replaceChildren(h('h3', null, 'Open and settled'));
+  if (!S.decisions.length) { box.append(empty('Nothing to decide yet', 'Start a vote above. Each of you picks once, and you can change your mind.')); return; }
+  for (const d of S.decisions) {
+    const votes = d.votes || {}, ids = Object.keys(votes), counts = d.options.map((_, i) => ids.filter(id => votes[id] === i).length), top = Math.max(...counts);
+    let verdict = '';
+    if (ids.length >= 2) {
+      const first = votes[ids[0]];
+      verdict = ids.every(id => votes[id] === first) ? 'You agree: ' + d.options[first] : 'Split vote. Talk it out.';
+    } else if (ids.length === 1) verdict = ids[0] === uid ? 'Waiting for your person to vote.' : 'Your person voted. Your turn.';
+    box.append(h('div', {class:'dec'},
+      h('p', {class:'q'}, d.q),
+      h('div', {class:'opts'}, d.options.map((o, i) => h('button', {type:'button', class: (votes[uid] === i ? 'mine ' : '') + (ids.length >= 2 && counts[i] === top && top > 0 ? 'lead' : ''), onclick: () => write(() => db.doc('decisions/' + d.id).update({votes: {[uid]: i}}))},
+        h('span', null, o), h('span', {class:'chip'}, ids.length >= 2 || votes[uid] === i ? counts[i] + (counts[i] === 1 ? ' vote' : ' votes') : '')))),
+      verdict ? h('div', {class:'verdict'}, verdict) : null,
+      h('div', {class:'sub', style:'font:500 .72rem/1.3 var(--mono);color:var(--muted);margin-top:6px'}, 'Asked by ' + nameOf(d.by)),
+      d.by === uid ? h('button', {class:'t', type:'button', onclick: () => write(() => db.doc('decisions/' + d.id).delete())}, 'Delete') : null));
+  }
+}
+
+/* ---- data plumbing ---- */
+function renderAll(){ renderStamp(); renderNotes(); renderMovies(); renderTTT(); renderWYR(); renderDecisions(); renderWheelTabs(); }
+async function resolveNames(){
+  const ids = new Set();
+  for (const n of S.notes) ids.add(n.by);
+  for (const m of S.movies) { ids.add(m.by); likedBy(m).forEach(i => ids.add(i)); Object.keys(m.ratings || {}).forEach(i => ids.add(i)); }
+  for (const d of S.decisions) { ids.add(d.by); Object.keys(d.votes || {}).forEach(i => ids.add(i)); }
+  if (S.ttt) { ids.add(S.ttt.x); ids.add(S.ttt.o); }
+  if (S.wyr) Object.keys(S.wyr.answers || {}).forEach(i => ids.add(i));
+  if (S.spin) ids.add(S.spin.by);
+  const fresh = [...ids].filter(i => i && !seen.has(i));
+  if (!fresh.length || !userNs) return;
+  fresh.forEach(i => seen.add(i));
+  const ps = await userNs.profiles(fresh);
+  for (const i of fresh) if (ps[i] && ps[i].name) names[i] = ps[i].name;
+  renderAll();
+}
+function sub(query, apply){
+  query.onSnapshot(snap => { apply(snap); renderAll(); resolveNames(); },
+    err => { if (err && err.code === 'revoked') setNotice('Your access to this journal was removed.'); });
+}
+function setNotice(t){ const n = $('#notice'); n.textContent = t || ''; n.hidden = !t; }
+
+async function boot(){
+  showTab((location.hash || '#notes').slice(1));
+  renderAll(); selectWheel('date');
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => drawWheel(rot));
+  const c = window.claude;
+  if (!c || !c.use) { setNotice('Open this page from its claude.ai link so your journal can sync between you two.'); return; }
+  [db, userNs] = await Promise.all([c.use('db'), c.use('user')]);
+  if (!db) { setNotice('Sign in to claude.ai to open the shared journal. Until then nothing is saved.'); return; }
+  if (userNs) {
+    uid = await userNs.id();
+    const cw = await userNs.can('data.write');
+    if (cw === false) setNotice('You can read this journal but not write in it. Ask the owner to share it with you as an editor or contributor.');
+  }
+  if (!uid) uid = 'me';
+  const docs = snap => snap.docs.map(d => ({id: d.id, ...d.data()}));
+  sub(db.collection('notes').orderBy('at', 'desc').limit(200), s => S.notes = docs(s));
+  sub(db.collection('movies').orderBy('at', 'desc').limit(200), s => S.movies = docs(s));
+  sub(db.collection('decisions').orderBy('at', 'desc').limit(100), s => S.decisions = docs(s));
+  sub(db.doc('games/ttt'), s => S.ttt = s.exists ? s.data() : null);
+  sub(db.doc('games/wyr'), s => S.wyr = s.exists ? s.data() : null);
+  sub(db.doc('meta/visit'), s => S.visit = s.exists ? s.data() : null);
+  sub(db.doc('spin/ours'), s => {
+    S.ours = s.exists ? s.data() : null;
+    const ta = $('#ours-text'); if (document.activeElement !== ta && S.ours) ta.value = (S.ours.items || []).join('\n');
+    if (curKey === 'ours' && !spinning) { curItems = wheelItems('ours'); $('#spin-btn').disabled = !curItems; drawWheel(rot); }
+  });
+  sub(db.doc('spin/last'), s => { S.spin = s.exists ? s.data() : null; onSpinDoc(); });
+}
+boot();
+</script>
