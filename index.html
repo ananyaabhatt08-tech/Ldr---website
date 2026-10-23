@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miles Apart, Hearts Together</title>
+<meta name="description" content="Tools, date ideas and conversation starters for long distance couples.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero">
+  <nav>
+    <span class="logo">♥ Miles Apart</span>
+    <a href="#countdown">Countdown</a>
+    <a href="#clocks">Time zones</a>
+    <a href="#dates">Date ideas</a>
+    <a href="#talk">Talk</a>
+    <a href="#tips">Tips</a>
+  </nav>
+  <div class="hero-text">
+    <h1>Miles apart,<br>hearts together.</h1>
+    <p>A little home on the internet for long distance couples: count down to your next hello, find the perfect time to call, and never run out of things to say.</p>
+    <a class="btn" href="#countdown">Start counting</a>
+  </div>
+</header>
+
+<main>
+  <section id="countdown">
+    <h2>Countdown to seeing each other</h2>
+    <form id="cd-form" class="row">
+      <input id="cd-name" placeholder="What are you counting to? (e.g. Our reunion)" maxlength="60">
+      <input id="cd-date" type="datetime-local" required>
+      <button class="btn" type="submit">Set</button>
+    </form>
+    <div id="cd-display" class="card center" hidden>
+      <h3 id="cd-title"></h3>
+      <div class="digits">
+        <div><b id="cd-d">0</b><span>days</span></div>
+        <div><b id="cd-h">0</b><span>hours</span></div>
+        <div><b id="cd-m">0</b><span>minutes</span></div>
+        <div><b id="cd-s">0</b><span>seconds</span></div>
+      </div>
+      <button id="cd-clear" class="link">Clear</button>
+    </div>
+    <h3>Days together vs. apart</h3>
+    <form id="since-form" class="row">
+      <label>Together since <input id="since-date" type="date"></label>
+      <button class="btn" type="submit">Save</button>
+    </form>
+    <p id="since-out" class="note"></p>
+  </section>
+
+  <section id="clocks">
+    <h2>Two time zones, one clock</h2>
+    <div class="grid2">
+      <div class="card center">
+        <input id="tz1-label" value="Me" aria-label="Your name">
+        <select id="tz1" aria-label="Your time zone"></select>
+        <div class="time" id="t1"></div><div class="note" id="d1"></div>
+      </div>
+      <div class="card center">
+        <input id="tz2-label" value="You" aria-label="Partner name">
+        <select id="tz2" aria-label="Partner time zone"></select>
+        <div class="time" id="t2"></div><div class="note" id="d2"></div>
+      </div>
+    </div>
+    <p id="tz-diff" class="note center"></p>
+  </section>
+
+  <section id="dates">
+    <h2>Virtual date ideas</h2>
+    <div class="card center">
+      <p id="date-idea" class="big">Press the button for an idea ✨</p>
+      <button id="date-btn" class="btn">Surprise us</button>
+    </div>
+  </section>
+
+  <section id="talk">
+    <h2>Never run out of things to say</h2>
+    <div class="grid2">
+      <div class="card center">
+        <h3>Conversation starter</h3>
+        <p id="q-out" class="big">…</p>
+        <button id="q-btn" class="btn">New question</button>
+      </div>
+      <div class="card center">
+        <h3>Send a sweet note</h3>
+        <p id="note-out" class="big">…</p>
+        <button id="note-btn" class="btn">New note</button>
+        <button id="note-copy" class="link">Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="tips">
+    <h2>Making it work</h2>
+    <div class="grid3">
+      <article class="card"><h3>📞 Ritual over routine</h3><p>Pick a regular call time you both protect, and add small rituals: good-morning texts, a show you watch together.</p></article>
+      <article class="card"><h3>🗓 Always have a next visit</h3><p>Having the next reunion on the calendar makes the distance feel temporary.</p></article>
+      <article class="card"><h3>💬 Share the small stuff</h3><p>Photos of your lunch, your commute, your day. The ordinary details build closeness.</p></article>
+      <article class="card"><h3>🤝 Talk about the hard parts</h3><p>Jealousy, loneliness and bad days are normal. Name them early and kindly.</p></article>
+      <article class="card"><h3>🎁 Mail something real</h3><p>Handwritten letters and little care packages hit differently than a text.</p></article>
+      <article class="card"><h3>🧭 Plan the end of distance</h3><p>Talk openly about when and how you will close the gap, even if it is rough.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer>Made with ♥ for everyone who says goodnight across a screen.</footer>
+<script src="script.js"></script>
+</body>
+</html>
