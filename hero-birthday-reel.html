@@ -1,0 +1,333 @@
+<title>Hero Birthday Reel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Cormorant+Garamond:ital,wght@1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: a 9:16 comic-book reel. Scene H is a canvas night city (everything is a function of time t):
+   a web-slinging hero swings across the skyline, lands, and spins "HAPPY BIRTHDAY" in web.
+   Scene S shows real screens from the Superhero Birthday Website on a blue sunburst; scene E is the end card.
+   window.__seek(t) renders any exact moment for frame-by-frame video export. */
+:root{
+  --blue:#2f7fd0; --blue2:#1f62b4; --navy:#14275c; --red:#c8202f; --cream:#f6ecd9; --gold:#ffc247; --ink:#0a0f2a;
+  --comic:'Bangers',Impact,sans-serif; --serif:'Cormorant Garamond',Georgia,serif; --body:'Figtree',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  background:var(--ink); color:var(--cream); font-family:var(--body); font-size:15px; line-height:1.45; margin:0;
+  padding-block:20px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+}
+.stage{
+  position:relative; flex:none; width:min(100%, 360px, calc((100dvh - 150px) * 9 / 16)); min-width:200px;
+  aspect-ratio:9/16; container-type:inline-size; overflow:hidden; border-radius:20px; background:var(--ink);
+  box-shadow:0 20px 60px rgba(0,0,0,.55);
+}
+.stage.reset, .stage.reset *{transition:none!important}
+#sky{position:absolute; inset:0; width:100%; height:100%; display:block}
+.scene{position:absolute; inset:0; opacity:0; transition:opacity .5s ease}
+.scene.on{opacity:1}
+.scene.done{opacity:0}
+@keyframes fadeUp{from{opacity:0; transform:translateY(3cqw)} to{opacity:1; transform:none}}
+@keyframes inOut{0%{opacity:0; transform:translateY(3cqw) scale(.96)} 12%{opacity:1; transform:none} 88%{opacity:1; transform:none} 100%{opacity:0; transform:translateY(-2cqw)}}
+@keyframes pop{0%{opacity:0; transform:scale(.3) rotate(var(--rot))} 25%{opacity:1; transform:scale(1.18) rotate(var(--rot))} 40%{transform:scale(1) rotate(var(--rot))} 85%{opacity:1; transform:scale(1) rotate(var(--rot))} 100%{opacity:0; transform:scale(1.1) rotate(var(--rot))}}
+
+/* comic captions */
+.cm{position:absolute; left:0; right:0; padding:0 5cqw; text-align:center; font-family:var(--comic); letter-spacing:.02em; font-size:11.4cqw; line-height:1.02; color:var(--cream); opacity:0;
+  -webkit-text-stroke:.9cqw var(--navy); paint-order:stroke fill; text-shadow:.9cqw .9cqw 0 var(--red); text-wrap:balance}
+.cm.red{color:#fff; text-shadow:.9cqw .9cqw 0 var(--navy); -webkit-text-stroke:.9cqw var(--red)}
+.on .cm.t{animation:inOut var(--len) ease-out var(--d) both}
+.on .cm.stay{animation:fadeUp .7s ease-out var(--d) both}
+.sfx{position:absolute; font-family:var(--comic); font-size:15cqw; color:#fff; -webkit-text-stroke:1cqw var(--red); paint-order:stroke fill; text-shadow:1cqw 1cqw 0 var(--navy); opacity:0; transform-origin:center}
+.on .sfx{animation:pop 1.1s ease-out var(--d) both}
+
+/* S and E share the sunburst */
+#sS,#sE{background:repeating-conic-gradient(from 0deg at 50% 66%, #3a8be0 0 6deg, #2b72c6 6deg 12deg)}
+.bunt{position:absolute; left:0; right:0; bottom:0; width:100%; height:auto; display:block}
+.k2{position:absolute; left:0; right:0; text-align:center; font-weight:600; font-size:3.2cqw; letter-spacing:.24em; text-transform:uppercase; color:#fff; opacity:0}
+.on .k2{animation:fadeUp .7s ease-out var(--d,.1s) both}
+.h2{position:absolute; left:0; right:0; padding:0 5cqw; text-align:center; font-family:var(--comic); font-size:11.6cqw; line-height:1.02; color:var(--cream); -webkit-text-stroke:.9cqw var(--navy); paint-order:stroke fill; text-shadow:.9cqw .9cqw 0 var(--red); opacity:0}
+.on .h2{animation:fadeUp .7s ease-out var(--d,.25s) both}
+#sS .k2{top:18cqw} #sS .h2{top:24cqw}
+.deck{position:absolute; left:6cqw; right:6cqw; top:50cqw; height:62cqw}
+.shot{position:absolute; left:50%; top:50%; margin:0; width:100%; opacity:0; transform:translate(-50%,-46%) scale(.94)}
+.shot img{display:block; width:100%; aspect-ratio:2.2; object-fit:cover; object-position:50% 0%; border-radius:2.4cqw; box-shadow:0 0 0 .6cqw #fff, 0 4cqw 10cqw rgba(10,15,42,.5)}
+.shot img.wide{aspect-ratio:auto}
+.shot figcaption{position:absolute; left:0; right:0; top:calc(100% + 3.6cqw); text-align:center; font-family:var(--serif); font-style:italic; font-weight:600; font-size:5.8cqw; color:#fff; text-shadow:0 .5cqw 2cqw rgba(10,15,42,.6)}
+.on .shot{animation:card var(--len) ease-in-out var(--d) both}
+.on .shot.hold{animation:cardHold .9s ease-out var(--d) both}
+@keyframes card{0%{opacity:0; transform:translate(-50%,-46%) scale(.94)} 11%{opacity:1; transform:translate(-50%,-50%) scale(1)} 89%{opacity:1; transform:translate(-50%,-50%) scale(1.02)} 100%{opacity:0; transform:translate(-50%,-53%) scale(1.03)}}
+@keyframes cardHold{from{opacity:0; transform:translate(-50%,-46%) scale(.94)} to{opacity:1; transform:translate(-50%,-50%) scale(1)}}
+.chips{position:absolute; left:6cqw; right:6cqw; top:132cqw; margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:2cqw}
+.chips li{font-size:3.3cqw; font-weight:600; color:#fff; padding:1.6cqw 3.6cqw; border-radius:9cqw; background:rgba(20,39,92,.45); opacity:.8}
+.on .chips li{animation:chipOn .5s ease-out var(--d) both}
+@keyframes chipOn{from{background:rgba(20,39,92,.45); color:#fff} to{background:var(--red); color:#fff; opacity:1}}
+
+#sE .k2{top:20cqw} #sE .h2{top:26cqw}
+#sE .deck{top:58cqw; height:52cqw}
+.cta{position:absolute; left:0; right:0; text-align:center; opacity:0}
+.cta.c1{top:124cqw; font-family:var(--comic); font-size:11cqw; line-height:1; color:#fff; -webkit-text-stroke:.9cqw var(--red); paint-order:stroke fill; text-shadow:.9cqw .9cqw 0 var(--navy)}
+.cta.c2{top:139cqw; font-weight:600; font-size:4cqw; letter-spacing:.14em; text-transform:uppercase; color:#fff}
+.cta.c3{top:152cqw; font-size:3.4cqw; letter-spacing:.08em; color:#fff}
+.cta.c3 b{font-weight:600; color:var(--gold)}
+.on .cta{animation:fadeUp .8s ease-out var(--d) both}
+
+/* page chrome */
+.bar{width:min(100%, 360px); height:3px; border-radius:3px; background:#1d2a55; overflow:hidden}
+.bar i{display:block; height:100%; width:0; background:var(--red)}
+.panel{width:min(100%, 360px); display:flex; flex-direction:column; gap:10px}
+.go{font:inherit; font-weight:600; cursor:pointer; border:0; border-radius:10px; padding:11px 14px; background:var(--gold); color:var(--ink)}
+.go:focus-visible{outline:2px solid #fff; outline-offset:2px}
+.note{margin:0; font-size:13px; color:#a9b6e0}
+.start{position:absolute; inset:0; display:grid; place-items:center; z-index:70; background:var(--ink)}
+.start[hidden]{display:none!important}
+</style>
+
+<main class="stage" id="stage" aria-label="Animated superhero birthday preview">
+  <canvas id="sky" width="720" height="1280" aria-hidden="true"></canvas>
+
+  <!-- H: the story (canvas does the drawing, DOM does the captions) -->
+  <section class="scene" id="sH">
+    <div class="cm t" style="top:13cqw;--d:.4s;--len:3.2s">Every hero<br>saves the day.</div>
+    <div class="sfx" style="left:6cqw;top:62cqw;--d:1.5s;--rot:-8deg">THWIP!</div>
+    <div class="sfx" style="left:44cqw;top:50cqw;--d:3.2s;--rot:6deg">THWIP!</div>
+    <div class="cm t red" style="top:13cqw;--d:3.9s;--len:3s">&hellip;but who saves<br>theirs?</div>
+    <div class="cm stay" style="top:118cqw;--d:9.9s">Who saves<br>their birthday?</div>
+    <div class="cm stay red" style="top:146cqw;--d:11.2s">You do.</div>
+  </section>
+
+  <!-- S: real screens -->
+  <section class="scene" id="sS">
+    <svg class="bunt" viewBox="0 0 360 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 80V30l30 22 30-22 30 22 30-22 30 22 30-22 30 22 30-22 30 22 30-22 30 22 30-22V80z" fill="#c8202f"/><path d="M0 80V50l30 14 30-14 30 14 30-14 30 14 30-14 30 14 30-14 30 14 30-14 30 14 30-14V80z" fill="#a8182a"/></svg>
+    <div class="k2" style="--d:.1s">Superhero birthday website</div>
+    <div class="h2" style="--d:.25s">Give them a<br>mission</div>
+    <div class="deck">
+      <figure class="shot" style="--d:.9s;--len:2.4s"><img src="assets/sh-hero.jpg" alt=""><figcaption>A welcome that feels like a party</figcaption></figure>
+      <figure class="shot" style="--d:3.1s;--len:2.4s"><img src="assets/sh-wish.jpg" alt=""><figcaption>Close your eyes and make a wish</figcaption></figure>
+      <figure class="shot" style="--d:5.3s;--len:2.4s"><img src="assets/sh-wall.jpg" alt=""><figcaption>A photo wall on a clothesline</figcaption></figure>
+      <figure class="shot" style="--d:7.5s;--len:2.4s"><img src="assets/sh-open.jpg" alt=""><figcaption>&ldquo;Open when&hellip;&rdquo; letters</figcaption></figure>
+      <figure class="shot" style="--d:9.7s;--len:2.4s"><img src="assets/sh-quiz.jpg" alt=""><figcaption>A trivia quiz with fun facts</figcaption></figure>
+      <figure class="shot" style="--d:11.9s;--len:2.4s"><img src="assets/sh-game.jpg" alt=""><figcaption>A catch-the-cake mini game</figcaption></figure>
+    </div>
+    <ul class="chips" aria-hidden="true">
+      <li style="--d:3.1s">Make a wish</li><li style="--d:5.3s">Photo wall</li><li style="--d:7.5s">Open when&hellip;</li><li style="--d:9.7s">Trivia quiz</li><li style="--d:11.9s">Mini game</li>
+    </ul>
+  </section>
+
+  <!-- E: end card -->
+  <section class="scene" id="sE">
+    <svg class="bunt" viewBox="0 0 360 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 80V30l30 22 30-22 30 22 30-22 30 22 30-22 30 22 30-22 30 22 30-22 30 22 30-22V80z" fill="#c8202f"/><path d="M0 80V50l30 14 30-14 30 14 30-14 30 14 30-14 30 14 30-14 30 14 30-14 30 14 30-14V80z" fill="#a8182a"/></svg>
+    <div class="k2" style="--d:.1s">Their birthday, their story</div>
+    <div class="h2" style="--d:.25s">A gift full<br>of surprises</div>
+    <div class="deck"><figure class="shot hold" style="--d:.7s"><img class="wide" src="assets/sh-cover.jpg" alt=""></figure></div>
+    <div class="cta c1" style="--d:1.7s">Make yours today</div>
+    <div class="cta c2" style="--d:2.4s">Link in bio</div>
+    <div class="cta c3" style="--d:3s">made with <b>iloveeefriez</b></div>
+  </section>
+
+  <div class="start" id="start" hidden><button class="go" id="playBtn" type="button">Play the story</button></div>
+</main>
+
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+<div class="panel">
+  <button class="go" id="replay" type="button">Replay</button>
+  <p class="note">About 33 seconds, 9:16. Replay, then screen-record it for a Reel or Short.</p>
+</div>
+
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+  function lerp(a, b, k){ return a + (b - a) * k; }
+  var seed = 5;
+  function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+  var cv = $('sky'), ctx = cv.getContext('2d'), W = 720, H = 1280;
+
+  /* ---- world: three parallax skyline layers, stars, moon ---- */
+  var LAYERS = [
+    {f:.22, base:930, col:'#233a7a', win:0, h:[160,300], w:[70,130]},
+    {f:.5,  base:990, col:'#15235a', win:.18, h:[200,380], w:[80,150]},
+    {f:1,   base:1060, col:'#0a1238', win:.34, h:[240,440], w:[90,170]}
+  ];
+  LAYERS.forEach(function(L){
+    L.b = []; var x = -300;
+    while (x < 3600){
+      var w = L.w[0] + rnd() * (L.w[1] - L.w[0]), h = L.h[0] + rnd() * (L.h[1] - L.h[0]), win = [];
+      if (L.win) for (var wy = 26; wy < h - 20; wy += 34) for (var wx = 12; wx < w - 18; wx += 26) if (rnd() < L.win) win.push([wx, wy, .5 + rnd() * .5]);
+      L.b.push({x:x, w:w, h:h, win:win}); x += w + (rnd() * 8);
+    }
+  });
+  var STARS = []; for (var i = 0; i < 90; i++) STARS.push({x:rnd() * W, y:rnd() * 760, r:.8 + rnd() * 1.6, p:rnd() * 6});
+
+  /* ---- hero timing ---- */
+  var A = 50 * Math.PI / 180, L0 = 420, AY = 330, HX0 = 190, SWT0 = .3, DUR = 1.7, NSW = 3, DX = 2 * L0 * Math.sin(A);
+  var AX0 = HX0 + L0 * Math.sin(A), TJ0 = SWT0 + NSW * DUR, TJ1 = TJ0 + .9;
+  function screenX(x){ return 90 + .2 * (x - HX0); }
+  var XEND = AX0 + (NSW - 1) * DX + L0 * Math.sin(A), CAMF = XEND - screenX(XEND);
+  var ROOF = {x:CAMF + 470, w:260, y:900}, LAND = {x:CAMF + 600, y:ROOF.y};
+  function swingAt(t){
+    var u = (t - SWT0) / DUR, k = clamp(Math.floor(u), 0, NSW - 1), tau = clamp(u - k, 0, 1);
+    var th = -A * Math.cos(Math.PI * tau), ax = AX0 + k * DX;
+    return {th:th, ax:ax, x:ax + L0 * Math.sin(th), y:AY + L0 * Math.cos(th)};
+  }
+  function camAt(t){
+    if (t >= TJ0) return CAMF;
+    var s = swingAt(Math.max(t, SWT0)); return s.x - screenX(s.x);
+  }
+
+  /* ---- drawing helpers ---- */
+  function rr(x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function limb(x0, y0, x1, y1, w, c){ ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); }
+  /* hero, feet at (0,0), about 205 tall. armR: 0 down, 1 up. armL: 0 down, 1 up, 2 forward */
+  function hero(armR, armL, legSpread, bounce){
+    var RED = '#d3202f', BLUE = '#1f4fa3', DK = '#0a1238';
+    ctx.save(); ctx.translate(0, -bounce);
+    limb(-10, -100, -10 - legSpread, -10, 22, BLUE); limb(10, -100, 10 + legSpread, -10, 22, BLUE);
+    ctx.fillStyle = RED; ctx.beginPath(); ctx.ellipse(-10 - legSpread, -6, 13, 8, 0, 0, 7); ctx.ellipse(10 + legSpread, -6, 13, 8, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = RED; ctx.beginPath(); ctx.moveTo(-30, -162); ctx.quadraticCurveTo(-34, -125, -23, -96); ctx.lineTo(23, -96); ctx.quadraticCurveTo(34, -125, 30, -162); ctx.quadraticCurveTo(0, -172, -30, -162); ctx.fill();
+    ctx.fillStyle = BLUE; ctx.beginPath(); ctx.moveTo(-23, -96); ctx.lineTo(23, -96); ctx.lineTo(19, -112); ctx.lineTo(-19, -112); ctx.fill();
+    ctx.fillStyle = '#ffc247'; ctx.beginPath(); for (var sp = 0; sp < 10; sp++){ var sr = sp % 2 ? 6 : 14, sa = -Math.PI / 2 + sp * Math.PI / 5; ctx.lineTo(Math.cos(sa) * sr, -138 + Math.sin(sa) * sr); } ctx.closePath(); ctx.fill();
+    var ax = [[-30, -158], [30, -158]];
+    // right arm (x>0)
+    if (armR === 1) limb(28, -156, 52, -214, 16, RED); else limb(28, -156, 42, -108, 16, RED);
+    ctx.fillStyle = BLUE; ctx.beginPath(); ctx.arc(armR === 1 ? 52 : 42, armR === 1 ? -214 : -106, 9, 0, 7); ctx.fill();
+    if (armL === 1) limb(-28, -156, -52, -214, 16, RED); else if (armL === 2) limb(-28, -156, -50, -128, 16, RED); else limb(-28, -156, -42, -108, 16, RED);
+    ctx.fillStyle = BLUE; ctx.beginPath(); ctx.arc(armL === 1 ? -52 : armL === 2 ? -50 : -42, armL === 1 ? -214 : armL === 2 ? -126 : -106, 9, 0, 7); ctx.fill();
+    // head
+    ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(0, -190, 22, 0, 7); ctx.fill();
+    ctx.fillStyle = '#0a1238'; rr(-20, -197, 40, 15, 7); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-8, -190, 5.5, 3.6, .25, 0, 7); ctx.ellipse(8, -190, 5.5, 3.6, -.25, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#7a1018'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-6, -176); ctx.quadraticCurveTo(0, -172, 6, -176); ctx.stroke();
+    ctx.restore();
+  }
+
+  function sky(t){
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#070b26'); g.addColorStop(.5, '#1c2b6a'); g.addColorStop(1, '#5a3f86');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    STARS.forEach(function(s){ ctx.fillStyle = 'rgba(255,255,255,' + (.3 + .7 * Math.abs(Math.sin(t * 1.3 + s.p))) + ')'; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill(); });
+    var mg = ctx.createRadialGradient(560, 250, 10, 560, 250, 260); mg.addColorStop(0, 'rgba(255,244,200,.55)'); mg.addColorStop(1, 'rgba(255,244,200,0)');
+    ctx.fillStyle = mg; ctx.fillRect(260, 0, 460, 560);
+    ctx.fillStyle = '#fff6d6'; ctx.beginPath(); ctx.arc(560, 250, 62, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(214,200,160,.55)'; ctx.beginPath(); ctx.arc(540, 236, 12, 0, 7); ctx.arc(582, 272, 8, 0, 7); ctx.arc(548, 276, 6, 0, 7); ctx.fill();
+  }
+  function city(t, cam){
+    LAYERS.forEach(function(Ly, li){
+      var off = cam * Ly.f; ctx.fillStyle = Ly.col;
+      Ly.b.forEach(function(b){
+        var x = b.x - off; if (x > W + 10 || x + b.w < -10) return;
+        ctx.fillRect(x, Ly.base - b.h, b.w, H);
+        b.win.forEach(function(w){ ctx.fillStyle = 'rgba(255,214,120,' + (w[2] * .85) + ')'; ctx.fillRect(x + w[0], Ly.base - b.h + w[1], 9, 14); });
+        ctx.fillStyle = Ly.col;
+      });
+    });
+  }
+  function roof(cam){
+    var x = ROOF.x - cam;
+    ctx.fillStyle = '#080d2c'; ctx.fillRect(x, ROOF.y, ROOF.w, H);
+    ctx.fillStyle = '#0d1440'; ctx.fillRect(x - 6, ROOF.y - 10, ROOF.w + 12, 12);
+    ctx.fillStyle = '#080d2c'; ctx.fillRect(x + 20, ROOF.y - 60, 46, 50); ctx.fillRect(x + 28, ROOF.y - 76, 30, 18);
+    ctx.fillRect(x + ROOF.w - 40, ROOF.y - 120, 4, 110); ctx.fillRect(x + ROOF.w - 56, ROOF.y - 96, 36, 3);
+  }
+  function web(x0, y0, x1, y1, a){ ctx.strokeStyle = 'rgba(255,255,255,' + a + ')'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); }
+
+  function lettering(t){
+    var lines = [['HAPPY', 360, 330, 7.2, 8.3, 190], ['BIRTHDAY', 360, 500, 8.3, 9.7, 150]];
+    ctx.font = '150px Bangers, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    var tip = null;
+    lines.forEach(function(l){
+      var p = clamp((t - l[3]) / (l[4] - l[3]), 0, 1); if (p <= 0) return;
+      ctx.font = l[5] + 'px Bangers, Impact, sans-serif'; var tw = ctx.measureText(l[0]).width, x0 = l[1] - tw / 2;
+      ctx.save(); ctx.beginPath(); ctx.rect(x0 - 20, l[2] - l[5], tw * p + 20, l[5] * 1.3); ctx.clip();
+      ctx.shadowColor = 'rgba(160,200,255,.9)'; ctx.shadowBlur = 18; ctx.lineWidth = 7; ctx.strokeStyle = '#fff'; ctx.lineJoin = 'round'; ctx.strokeText(l[0], l[1], l[2]);
+      ctx.shadowBlur = 0; ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(180,210,255,.8)'; ctx.strokeText(l[0], l[1], l[2]);
+      ctx.restore();
+      if (p < 1) tip = [x0 + tw * p, l[2] - l[5] * .35];
+    });
+    return tip;
+  }
+  var BAL = []; for (i = 0; i < 12; i++) BAL.push({x:50 + rnd() * 620, s:.9 + rnd() * .6, v:150 + rnd() * 120, c:['#d3202f','#1f4fa3','#f6ecd9','#ffc247'][i % 4], p:rnd() * 6, d:rnd() * 1.6});
+  var CON = []; for (i = 0; i < 140; i++){ var an = rnd() * Math.PI * 2, sp = 200 + rnd() * 700; CON.push({vx:Math.cos(an) * sp, vy:Math.sin(an) * sp - 420, c:['#ffc247','#d3202f','#2f7fd0','#fff','#ff7a8a'][i % 5], r:rnd() * 6, w:8 + rnd() * 8, h:12 + rnd() * 10}); }
+  function balloons(t){
+    BAL.forEach(function(b){
+      var tt = t - 9.7 - b.d; if (tt < 0) return;
+      var y = 1400 - b.v * tt * 1.7, x = b.x + Math.sin(tt * 1.4 + b.p) * 22, r = 46 * b.s;
+      ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y + r * 1.2); ctx.quadraticCurveTo(x + 10, y + r * 2.2, x - 4, y + r * 3.2); ctx.stroke();
+      ctx.fillStyle = b.c; ctx.beginPath(); ctx.ellipse(x, y, r * .82, r, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.ellipse(x - r * .3, y - r * .35, r * .16, r * .3, .4, 0, 7); ctx.fill();
+    });
+  }
+  function confetti(t){
+    var tt = t - 9.8; if (tt < 0 || tt > 3.4) return;
+    CON.forEach(function(c){
+      var x = 360 + c.vx * tt, y = 760 + c.vy * tt + 520 * tt * tt;
+      ctx.globalAlpha = clamp(1 - (tt - 2.2) / 1.2, 0, 1); ctx.save(); ctx.translate(x, y); ctx.rotate(c.r + tt * 5); ctx.fillStyle = c.c; ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h); ctx.restore();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function draw(t){
+    if (t > 12.6){ return; }
+    ctx.clearRect(0, 0, W, H);
+    sky(t); var cam = camAt(t); city(t, cam);
+    if (t >= TJ0 - 2.5) roof(cam);
+    var tip = lettering(t);
+    if (t < TJ0){
+      var s = swingAt(t), hx = s.x - cam, hy = s.y;
+      web(s.ax - cam, AY - 40, hx, hy, .9);
+      ctx.save(); ctx.translate(hx, hy); ctx.rotate(-s.th * .55); ctx.translate(-52, 214); hero(1, 2, 8 + 6 * Math.sin(s.th * 2), 0); ctx.restore();
+    } else if (t < TJ1){
+      var u = (t - TJ0) / (TJ1 - TJ0), s0 = swingAt(TJ0 - .001), sx0 = s0.x - cam, sy0 = s0.y + 214, ex = LAND.x - cam, ey = LAND.y;
+      var x = lerp(sx0 - 52, ex, u), y = lerp(sy0, ey, u) - 220 * Math.sin(Math.PI * u);
+      web(s0.ax - cam, AY - 40, lerp(s0.x - cam, x + 52, 1), lerp(s0.y, y - 214, 1), clamp(1 - u * 3, 0, .9));
+      ctx.save(); ctx.translate(x, y); ctx.rotate((1 - u) * -.5 * (1 - u)); hero(1, 1, 10 * (1 - u) + 4, 0); ctx.restore();
+    } else {
+      var cel = t >= 9.7, bob = cel ? Math.abs(Math.sin((t - 9.7) * 6)) * 16 : 0;
+      ctx.save(); ctx.translate(LAND.x - cam, LAND.y); hero(cel ? 1 : 0, cel ? 1 : 0, 6, bob); ctx.restore();
+      if (tip){ web(LAND.x - cam + 52, LAND.y - 214, tip[0], tip[1], .9); }
+    }
+    balloons(t); confetti(t);
+  }
+
+  /* ---- timeline ---- */
+  var stage = $('stage'), scenes = ['sH','sS','sE'].map($), STARTS = [0, 12.6, 27.2], END = 33.5, raf = 0, t0 = 0, next = 0, prog = $('prog');
+  function tick(){
+    var t = (performance.now() - t0) / 1000;
+    while (next < STARTS.length && t >= STARTS[next]){ scenes[next].classList.add('on'); if (next > 0) scenes[next - 1].classList.add('done'); next++; }
+    draw(t); prog.style.width = Math.min(100, t / END * 100) + '%';
+    if (t < END) raf = requestAnimationFrame(tick);
+  }
+  function play(){
+    cancelAnimationFrame(raf); $('start').hidden = true;
+    stage.classList.add('reset'); scenes.forEach(function(s){ s.classList.remove('on', 'done'); s.style.opacity = ''; }); void stage.offsetWidth; stage.classList.remove('reset');
+    next = 0; t0 = performance.now(); tick();
+  }
+  /* Deterministic seek, used to render the video frame by frame. */
+  window.__seek = function(t){
+    cancelAnimationFrame(raf);
+    stage.classList.add('reset');
+    scenes.forEach(function(sc, i){
+      var on = t >= STARTS[i], nx = i + 1 < STARTS.length ? STARTS[i + 1] : 1e9;
+      sc.classList.toggle('on', on);
+      var inn = i === 0 ? 1 : clamp((t - STARTS[i]) / .5, 0, 1), out = t >= nx ? 1 - clamp((t - nx) / .5, 0, 1) : 1;
+      sc.style.opacity = on ? Math.min(inn, out) : 0;
+    });
+    void stage.offsetWidth;
+    document.getAnimations().forEach(function(a){
+      var el = a.effect && a.effect.target; if (!el || !el.closest) return;
+      var sc = el.closest('.scene'), i = sc ? scenes.indexOf(sc) : -1;
+      a.pause(); a.currentTime = Math.max(0, (t - (i < 0 ? 0 : STARTS[i])) * 1000);
+    });
+    draw(t);
+  };
+  $('replay').addEventListener('click', play);
+  $('playBtn').addEventListener('click', play);
+  if (document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ draw(0); }); }
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ $('start').hidden = false; draw(0); }
+  else { play(); }
+})();
+</script>

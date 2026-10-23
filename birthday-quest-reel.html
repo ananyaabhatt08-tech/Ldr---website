@@ -1,0 +1,242 @@
+<title>Birthday Quest Reel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: a 9:16 reel in the Birthday Quest look (burgundy stripes, gold serif). Three scenes share one
+   striped background: H (hook), S (chapters: real screens plus an animated photo wall with sample photos),
+   E (end card). window.__seek(t) renders any exact moment for video export. */
+:root{
+  --wine:#3a0a1e; --burg:#5c1030; --gold:#d9b15a; --gold2:#f1d89a; --cream:#f3e6cf; --paper:#f6ead3; --ink:#2a0d19;
+  --display:'Cormorant Garamond',Georgia,serif; --body:'Jost',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  background:#1d0610; color:var(--cream); font-family:var(--body); font-size:15px; line-height:1.45; margin:0;
+  padding-block:20px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+}
+.stage{
+  position:relative; flex:none; width:min(100%, 360px, calc((100dvh - 150px) * 9 / 16)); min-width:200px;
+  aspect-ratio:9/16; container-type:inline-size; overflow:hidden; border-radius:20px; background:var(--wine);
+  box-shadow:0 20px 60px rgba(0,0,0,.55);
+}
+.stage.reset, .stage.reset *{transition:none!important}
+.bgs{position:absolute; inset:-10% 0; background:
+  linear-gradient(45deg, rgba(255,255,255,.04) 25%, transparent 25% 50%, rgba(255,255,255,.04) 50% 75%, transparent 75% 100%) 0 0/46cqw 46cqw,
+  repeating-linear-gradient(90deg, #3b0a1f 0 9cqw, #520e2c 9cqw 18cqw);
+  animation:drift 40s linear infinite}
+@keyframes drift{to{background-position:92cqw 0, 0 0}}
+.vig{position:absolute; inset:0; background:radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(20,3,10,.65) 100%); pointer-events:none}
+.scene{position:absolute; inset:0; opacity:0; transition:opacity .6s ease}
+.scene.on{opacity:1}
+.scene.done{opacity:0}
+@keyframes fadeUp{from{opacity:0; transform:translateY(3cqw)} to{opacity:1; transform:none}}
+@keyframes inOut{0%{opacity:0; transform:translateY(3cqw)} 16%{opacity:1; transform:none} 84%{opacity:1; transform:none} 100%{opacity:0; transform:translateY(-2cqw)}}
+
+.kick{position:absolute; left:0; right:0; text-align:center; font-weight:600; font-size:3cqw; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); opacity:0}
+.on .kick{animation:fadeUp .8s ease-out var(--d,.2s) both}
+.h1,.h2{position:absolute; left:0; right:0; padding:0 6cqw; text-align:center; font-family:var(--display); font-style:italic; font-weight:500; line-height:.98; color:var(--cream); opacity:0; text-wrap:balance}
+.h1{font-size:19cqw}
+.h2{font-size:11.4cqw; line-height:1.02}
+.gold{background:linear-gradient(180deg,#f6dfa0,#b98a3a 80%); -webkit-background-clip:text; background-clip:text; color:transparent}
+.on .h1.a{animation:inOut 2.5s ease-out .5s both}
+.on .h1.b{animation:fadeUp 1s ease-out 2.9s both}
+.on .h2{animation:fadeUp .8s ease-out var(--d,.3s) both}
+
+/* hook: the card that gets swapped for a world */
+.paper{position:absolute; left:50%; top:88cqw; width:58cqw; height:40cqw; margin-left:-29cqw; background:var(--paper); border-radius:1.6cqw; box-shadow:0 4cqw 10cqw rgba(0,0,0,.45); transform:rotate(-4deg); opacity:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2cqw; color:var(--ink)}
+.paper b{font-family:var(--display); font-style:italic; font-weight:600; font-size:8cqw}
+.paper span{font-size:2.6cqw; letter-spacing:.2em; text-transform:uppercase; color:#8b6a45}
+.on .paper{animation:paperIn .8s ease-out 1s both, paperOut .7s ease-in 2.5s both}
+@keyframes paperIn{from{opacity:0; transform:translateY(8cqw) rotate(-10deg)} to{opacity:1; transform:rotate(-4deg)}}
+@keyframes paperOut{from{opacity:1; transform:rotate(-4deg)} to{opacity:0; transform:translate(22cqw,18cqw) rotate(24deg) scale(.7)}}
+.spark{position:absolute; width:5cqw; height:5cqw; opacity:0; background:var(--gold2); clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}
+.on .spark{animation:twinkle 1.6s ease-in-out var(--d) infinite}
+@keyframes twinkle{0%,100%{opacity:0; transform:scale(.3) rotate(0)} 50%{opacity:1; transform:scale(1) rotate(40deg)}}
+
+/* chapters: screens + photo wall */
+#sS .kick{top:16cqw}
+#sS .h2{top:22cqw; font-size:10.6cqw}
+.deck{position:absolute; left:6cqw; right:6cqw; top:50cqw; height:70cqw}
+.shot{position:absolute; left:50%; top:50%; margin:0; width:100%; opacity:0; transform:translate(-50%,-46%) scale(.94)}
+.shot img.scr{display:block; width:100%; aspect-ratio:1.45; object-fit:cover; object-position:var(--pos,50% 50%); border-radius:3cqw; box-shadow:0 0 0 .4cqw rgba(217,177,90,.5), 0 4cqw 10cqw rgba(0,0,0,.4)}
+.shot img.wide{aspect-ratio:auto}
+.shot figcaption{position:absolute; left:0; right:0; top:calc(100% + 3.4cqw); text-align:center; font-family:var(--display); font-style:italic; font-weight:600; font-size:5.2cqw; color:var(--gold2)}
+.on .shot{animation:card var(--len) ease-in-out var(--d) both}
+.on .shot.hold{animation:cardHold .9s ease-out var(--d) both}
+@keyframes card{0%{opacity:0; transform:translate(-50%,-46%) scale(.94)} 10%{opacity:1; transform:translate(-50%,-50%) scale(1)} 90%{opacity:1; transform:translate(-50%,-50%) scale(1.02)} 100%{opacity:0; transform:translate(-50%,-53%) scale(1.03)}}
+@keyframes cardHold{from{opacity:0; transform:translate(-50%,-46%) scale(.94)} to{opacity:1; transform:translate(-50%,-50%) scale(1)}}
+.chips{position:absolute; left:6cqw; right:6cqw; top:141cqw; margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:2cqw}
+.chips li{font-size:3.2cqw; font-weight:600; letter-spacing:.06em; color:var(--cream); padding:1.6cqw 3.6cqw; border-radius:9cqw; border:.3cqw solid rgba(217,177,90,.5); opacity:.55}
+.on .chips li{animation:chipOn .5s ease-out var(--d) both}
+@keyframes chipOn{from{opacity:.55; background:transparent; color:#f3e6cf} to{opacity:1; background:var(--gold); color:var(--ink); border-color:var(--gold)}}
+
+.wallshot{width:86%}
+.wall{border-radius:3cqw; padding:3.6cqw 3cqw 3.2cqw; background:linear-gradient(180deg,#4a0b25,#3a0a1e); box-shadow:0 0 0 .4cqw rgba(217,177,90,.5), 0 4cqw 10cqw rgba(0,0,0,.4); text-align:center}
+.wall h4{margin:0; font-family:var(--display); font-weight:600; font-size:4.6cqw; color:var(--gold); white-space:nowrap}
+.wall .sub{font-size:2.5cqw; color:var(--cream); opacity:.85; margin:.6cqw 0 .8cqw}
+.wall .cnt{font-family:var(--display); font-style:italic; font-size:4.2cqw; color:var(--gold2); margin-bottom:2cqw}
+.pols{display:grid; grid-template-columns:repeat(3,1fr); gap:2.4cqw 2cqw}
+.pol{position:relative; opacity:0; transform:rotate(var(--r))}
+.on .pol{animation:pop .5s ease-out var(--p) both}
+@keyframes pop{from{opacity:0; transform:rotate(var(--r)) scale(.7) translateY(3cqw)} to{opacity:1; transform:rotate(var(--r))}}
+.pol .in{background:var(--paper); padding:1.3cqw 1.3cqw 1.2cqw; border-radius:.5cqw; box-shadow:0 1.2cqw 3cqw rgba(0,0,0,.45)}
+.on .pol.drag .in{animation:drag .9s ease-in-out var(--g) both}
+@keyframes drag{to{transform:translate(2.6cqw,-3.4cqw) rotate(5deg)}}
+.pol img{display:block; width:100%; aspect-ratio:1; object-fit:cover; filter:brightness(.85) blur(1.3cqw) saturate(.5)}
+.on .pol img{animation:develop 1s ease-out var(--d) both}
+@keyframes develop{from{filter:brightness(.85) blur(1.3cqw) saturate(.5)} to{filter:none}}
+.pol .cp{font-family:var(--display); font-style:italic; font-weight:600; font-size:2.7cqw; line-height:1.1; color:var(--ink); text-align:center; padding-top:.8cqw; min-height:5.4cqw}
+.pol .tap{position:absolute; left:0; right:0; bottom:.5cqw; text-align:center; font-size:1.6cqw; letter-spacing:.14em; text-transform:uppercase; color:#8b6a45}
+.on .pol .tap{animation:tapOut .4s ease-out var(--d) both}
+@keyframes tapOut{to{opacity:0}}
+.pol .rip{position:absolute; left:50%; top:40%; width:7cqw; height:7cqw; margin:-3.5cqw; border-radius:50%; border:.5cqw solid var(--gold); opacity:0}
+.on .pol .rip{animation:ripple .7s ease-out var(--rp) both}
+@keyframes ripple{0%{opacity:.9; transform:scale(.3)} 100%{opacity:0; transform:scale(1.5)}}
+
+/* end */
+#sE .kick{top:24cqw}
+#sE .h2{top:30cqw}
+#sE .deck{top:60cqw; height:52cqw}
+.cta{position:absolute; left:0; right:0; text-align:center; opacity:0}
+.cta.c1{top:126cqw; font-family:var(--display); font-style:italic; font-weight:600; font-size:10cqw; line-height:1}
+.cta.c2{top:141cqw; font-weight:600; font-size:4cqw; letter-spacing:.12em; text-transform:uppercase; color:var(--cream)}
+.cta.c3{top:155cqw; font-size:3.4cqw; letter-spacing:.08em; color:var(--cream); opacity:0}
+.cta.c3 b{font-weight:600; color:var(--gold)}
+.on .cta{animation:fadeUp .8s ease-out var(--d) both}
+
+/* page chrome */
+.bar{width:min(100%, 360px); height:3px; border-radius:3px; background:#4a1a2c; overflow:hidden}
+.bar i{display:block; height:100%; width:0; background:var(--gold)}
+.panel{width:min(100%, 360px); display:flex; flex-direction:column; gap:10px}
+.go{font:inherit; font-weight:600; cursor:pointer; border:0; border-radius:10px; padding:11px 14px; background:var(--gold); color:var(--ink)}
+.go:focus-visible{outline:2px solid #fff; outline-offset:2px}
+.note{margin:0; font-size:13px; color:#d6b9a8}
+.start{position:absolute; inset:0; display:grid; place-items:center; z-index:70; background:var(--wine)}
+.start[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){ .bgs{animation:none} }
+</style>
+
+<main class="stage" id="stage" aria-label="Animated Birthday Quest preview">
+  <div class="bgs" aria-hidden="true"></div>
+  <div class="vig" aria-hidden="true"></div>
+
+  <!-- H: hook -->
+  <section class="scene" id="sH">
+    <div class="kick" style="top:25cqw;--d:.2s">An interactive birthday gift</div>
+    <div class="h1 a" style="top:34cqw">Don&rsquo;t send<br>a card.</div>
+    <div class="paper" aria-hidden="true"><b>Happy Birthday</b><span>from me, to you</span></div>
+    <div class="h1 b" style="top:40cqw"><span class="gold">Send a<br>whole world.</span></div>
+    <span class="spark" style="left:14cqw;top:36cqw;--d:3.3s"></span>
+    <span class="spark" style="left:80cqw;top:50cqw;--d:3.8s;width:7cqw;height:7cqw"></span>
+    <span class="spark" style="left:22cqw;top:88cqw;--d:4.2s;width:4cqw;height:4cqw"></span>
+    <span class="spark" style="left:70cqw;top:100cqw;--d:3.5s"></span>
+    <span class="spark" style="left:48cqw;top:112cqw;--d:4.6s;width:6cqw;height:6cqw"></span>
+  </section>
+
+  <!-- S: five little chapters -->
+  <section class="scene" id="sS">
+    <div class="kick" style="--d:.1s">Five little chapters</div>
+    <div class="h2" style="--d:.25s">Made just for them</div>
+    <div class="deck">
+      <figure class="shot" style="--d:.9s;--len:2.5s"><img class="scr" src="assets/bq-journey.jpg" alt="" style="--pos:50% 35%"><figcaption>Their own birthday journey</figcaption></figure>
+      <figure class="shot" style="--d:3.2s;--len:2.4s"><img class="scr" src="assets/bq-cake.jpg" alt="" style="--pos:50% 50%"><figcaption>Bake the cake, light the candles</figcaption></figure>
+      <figure class="shot wallshot" style="--d:5.5s;--len:5.5s">
+        <div class="wall">
+          <h4>Chapter III &middot; The Photo Wall</h4>
+          <div class="sub">Tap a photo to develop it. Drag to rearrange.</div>
+          <div class="cnt" id="cnt">Developed 0 / 6</div>
+          <div class="pols">
+            <div class="pol" style="--r:-3deg;--p:5.7s;--d:6.2s;--rp:5.85s"><div class="in"><img src="assets/bq-photo1.jpg" alt=""><div class="cp">Where it all began</div></div><i class="rip"></i></div>
+            <div class="pol" style="--r:2deg;--p:5.9s;--d:6.7s;--rp:6.35s"><div class="in"><img src="assets/bq-photo2.jpg" alt=""><div class="cp">Rooftop, golden hour</div></div><i class="rip"></i></div>
+            <div class="pol" style="--r:4deg;--p:6.1s;--d:7.2s;--rp:6.85s"><div class="in"><img src="assets/bq-photo3.jpg" alt=""><div class="cp">Our table, always</div></div><i class="rip"></i></div>
+            <div class="pol" style="--r:3deg;--p:6.3s;--d:7.7s;--rp:7.35s"><div class="in"><img src="assets/bq-photo4.jpg" alt=""><div class="cp">Walking home, again</div></div><i class="rip"></i></div>
+            <div class="pol drag" style="--r:-2deg;--p:6.5s;--d:8.2s;--rp:7.85s;--g:9.3s"><div class="in"><img src="assets/bq-photo5.jpg" alt=""><div class="cp">The gift that made you cry</div></div><i class="rip"></i></div>
+            <div class="pol" style="--r:-4deg;--p:6.7s;--d:8.7s;--rp:8.35s"><div class="in"><img src="assets/bq-photo6.jpg" alt=""><div class="cp">Still us</div></div><i class="rip"></i></div>
+          </div>
+        </div>
+        <figcaption>Photos that develop as they tap</figcaption>
+      </figure>
+      <figure class="shot" style="--d:11.2s;--len:2.4s"><img class="scr" src="assets/bq-gifts.jpg" alt="" style="--pos:50% 30%"><figcaption>Gifts: vouchers, notes, promises</figcaption></figure>
+      <figure class="shot" style="--d:13.8s;--len:2.4s"><img class="scr" src="assets/bq-letter.jpg" alt="" style="--pos:50% 20%"><figcaption>A letter with a secret word</figcaption></figure>
+    </div>
+    <ul class="chips" aria-hidden="true">
+      <li style="--d:3.2s">Bake the cake</li><li style="--d:5.5s">Photo wall</li><li style="--d:11.2s">Unwrap gifts</li><li style="--d:13.8s">Secret letter</li>
+    </ul>
+  </section>
+
+  <!-- E: end card -->
+  <section class="scene" id="sE">
+    <div class="kick" style="--d:.1s">Birthday Quest</div>
+    <div class="h2" style="--d:.25s">Give a birthday<br><span class="gold">they can play</span></div>
+    <div class="deck"><figure class="shot hold" style="--d:.7s"><img class="scr wide" src="assets/bq-cover.jpg" alt=""></figure></div>
+    <div class="cta c1" style="--d:1.7s"><span class="gold">Make yours today</span></div>
+    <div class="cta c2" style="--d:2.4s">Link in bio</div>
+    <div class="cta c3" style="--d:3s">made with <b>iloveeefriez</b></div>
+  </section>
+
+  <div class="start" id="start" hidden><button class="go" id="playBtn" type="button">Play the quest</button></div>
+</main>
+
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+<div class="panel">
+  <button class="go" id="replay" type="button">Replay</button>
+  <p class="note">About 30 seconds, 9:16. Replay, then screen-record it for a Reel or Short. The photos are sample pictures from the demo.</p>
+</div>
+
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+  var stage = $('stage'), scenes = ['sH','sS','sE'].map($), STARTS = [0, 5.5, 21.9], END = 30.5, raf = 0, t0 = 0, next = 0, prog = $('prog');
+  /* when each polaroid finishes developing, in seconds from the start of scene S */
+  var DEV = [6.2, 6.7, 7.2, 7.7, 8.2, 8.7];
+  function draw(t){
+    var n = 0, ts = t - STARTS[1];
+    DEV.forEach(function(d){ if (ts >= d + .8) n++; });
+    $('cnt').textContent = 'Developed ' + n + ' / 6';
+  }
+  function tick(){
+    var t = (performance.now() - t0) / 1000;
+    while (next < STARTS.length && t >= STARTS[next]){
+      scenes[next].classList.add('on');
+      if (next > 0) scenes[next - 1].classList.add('done');
+      next++;
+    }
+    draw(t); prog.style.width = Math.min(100, t / END * 100) + '%';
+    if (t < END) raf = requestAnimationFrame(tick);
+  }
+  function play(){
+    cancelAnimationFrame(raf); $('start').hidden = true;
+    stage.classList.add('reset'); scenes.forEach(function(s){ s.classList.remove('on', 'done'); s.style.opacity = ''; }); void stage.offsetWidth; stage.classList.remove('reset');
+    next = 0; t0 = performance.now(); tick();
+  }
+  /* Deterministic seek, used to render the video frame by frame. */
+  window.__seek = function(t){
+    cancelAnimationFrame(raf);
+    stage.classList.add('reset');
+    scenes.forEach(function(sc, i){
+      var on = t >= STARTS[i], nx = i + 1 < STARTS.length ? STARTS[i + 1] : 1e9;
+      sc.classList.toggle('on', on);
+      var inn = i === 0 ? 1 : clamp((t - STARTS[i]) / .6, 0, 1), out = t >= nx ? 1 - clamp((t - nx) / .5, 0, 1) : 1;
+      sc.style.opacity = on ? Math.min(inn, out) : 0;
+    });
+    void stage.offsetWidth;
+    document.getAnimations().forEach(function(a){
+      var el = a.effect && a.effect.target; if (!el || !el.closest) return;
+      var sc = el.closest('.scene'), i = sc ? scenes.indexOf(sc) : -1;
+      a.pause(); a.currentTime = Math.max(0, (t - (i < 0 ? 0 : STARTS[i])) * 1000);
+    });
+    draw(t);
+  };
+  $('replay').addEventListener('click', play);
+  $('playBtn').addEventListener('click', play);
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ $('start').hidden = false; }
+  else { play(); }
+})();
+</script>
