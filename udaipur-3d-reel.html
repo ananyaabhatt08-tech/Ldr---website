@@ -49,62 +49,61 @@ body{
 .sfx{position:absolute; font-family:'Cinzel',Georgia,serif; font-weight:600; font-size:7.6cqw; letter-spacing:.12em; color:#fff; text-shadow:0 .4cqw 0 var(--maroon), 0 0 2cqw rgba(90,19,40,.5); opacity:0; translate:-50% -100%}
 .on .sfx{animation:bubble var(--len) ease-out var(--d) both}
 
-/* M: quiet timeline on ivory */
-#sM{background:var(--ivory)}
+/* M, P, E: the dusty-blue invitation palette */
+#sM,#sE{--navy:#2b3d5e; --bronze:#a97c3d; --ice:#eef2f7; --soft:#5d6f8a}
+#sM{background:var(--ice)}
+#sM .cp,#sE .cp{color:var(--navy)} #sM .cp b,#sE .cp b{color:var(--bronze)}
 .ms{position:absolute; left:16cqw; right:10cqw; top:62cqw; display:flex; flex-direction:column; gap:15cqw}
-.ms::before{content:""; position:absolute; left:-7cqw; top:2cqw; bottom:2cqw; width:.3cqw; background:var(--gold); transform-origin:top; transform:scaleY(0)}
+.ms::before{content:""; position:absolute; left:-7cqw; top:2cqw; bottom:2cqw; width:.3cqw; background:var(--bronze); transform-origin:top; transform:scaleY(0)}
 .on .ms::before{animation:grow 2.6s ease-in-out .8s both}
 @keyframes grow{to{transform:scaleY(1)}}
 .m{position:relative; opacity:0}
-.m::before{content:""; position:absolute; left:-8.3cqw; top:1.8cqw; width:2.6cqw; height:2.6cqw; border-radius:50%; background:var(--gold)}
+.m::before{content:""; position:absolute; left:-8.3cqw; top:1.8cqw; width:2.6cqw; height:2.6cqw; border-radius:50%; background:var(--bronze)}
 .on .m{animation:fadeUp .8s ease-out var(--d) both}
-.m b{display:block; font-family:var(--cap); font-weight:400; font-size:3.4cqw; letter-spacing:.3em; color:var(--gold)}
-.m span{display:block; font-family:var(--display); font-style:italic; font-weight:600; font-size:8.4cqw; line-height:1.05; margin-top:1.4cqw; color:var(--maroon)}
+.m b{display:block; font-family:var(--cap); font-weight:400; font-size:3.4cqw; letter-spacing:.3em; color:var(--bronze)}
+.m span{display:block; font-family:var(--display); font-style:italic; font-weight:600; font-size:8.4cqw; line-height:1.05; margin-top:1.4cqw; color:var(--navy)}
 
 /* P: the invitation over a soft blur */
-#sB{background:var(--wine); overflow:hidden}
+#sB{background:#1b2740; overflow:hidden}
 .bd{position:absolute; inset:0; overflow:hidden}
-.bd img{position:absolute; left:-30%; top:-20%; width:160%; height:140%; object-fit:cover; opacity:0; filter:blur(6cqw) saturate(1.08) brightness(.82)}
+.bd img{position:absolute; left:-30%; top:-20%; width:160%; height:140%; object-fit:cover; opacity:0; filter:blur(6cqw) saturate(1.6) brightness(.98)}
 .on .bd img{animation:win var(--len) linear var(--d) both}
 .on .bd img.last,.on .screen img.last{animation:winIn .6s linear var(--d) both}
-.shade{position:absolute; inset:0; background:linear-gradient(180deg, rgba(30,6,14,.35), rgba(30,6,14,.1) 40%, rgba(30,6,14,.4))}
-.phone{position:absolute; left:50%; top:40cqw; width:57cqw; margin-left:-28.5cqw; padding:1.4cqw; border-radius:7.4cqw; background:#0d0a0b;
-  box-shadow:0 7cqw 16cqw rgba(10,2,6,.55); opacity:0}
+.shade{position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,30,56,.34), rgba(20,30,56,.04) 40%, rgba(20,30,56,.4))}
+.phone{position:absolute; left:50%; top:38cqw; width:62cqw; margin-left:-31cqw; padding:1.4cqw; border-radius:7.4cqw; background:#0b0d12;
+  box-shadow:0 7cqw 16cqw rgba(8,12,26,.55); opacity:0}
 .on .phone{animation:rise 1.3s cubic-bezier(.2,.8,.2,1) .5s both}
 @keyframes rise{from{opacity:0; transform:translateY(20cqw)} to{opacity:1; transform:none}}
-.screen{position:relative; aspect-ratio:900/1948; border-radius:6.1cqw; overflow:hidden; background:var(--maroon)}
+.screen{position:relative; aspect-ratio:576/1024; border-radius:6.1cqw; overflow:hidden; background:#9fb2cf}
 .screen img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0}
 .on .screen img{animation:win var(--len) linear var(--d) both}
 @keyframes win{0%{opacity:0} 8%{opacity:1} 92%{opacity:1} 100%{opacity:0}}
 @keyframes winIn{from{opacity:0} to{opacity:1}}
-.pill{position:absolute; left:50%; top:1.5cqw; width:15cqw; height:3.4cqw; margin-left:-7.5cqw; border-radius:3cqw; background:#0d0a0b; z-index:3}
-.rip{position:absolute; left:50%; top:50%; width:14cqw; height:14cqw; margin:-7cqw; border-radius:50%; border:.5cqw solid #fff; opacity:0; z-index:4}
+.pill{position:absolute; left:50%; top:1.5cqw; width:15cqw; height:3.4cqw; margin-left:-7.5cqw; border-radius:3cqw; background:#0b0d12; z-index:3}
+.rip{position:absolute; left:50%; top:48%; width:14cqw; height:14cqw; margin:-7cqw; border-radius:50%; border:.5cqw solid #fff; opacity:0; z-index:4}
 .on .rip{animation:ripple .9s ease-out 2.7s both}
 @keyframes ripple{0%{opacity:.9; transform:scale(.3)} 100%{opacity:0; transform:scale(2.2)}}
-.flash{position:absolute; inset:0; border-radius:6cqw; background:rgba(255,246,226,.9); opacity:0; z-index:5; pointer-events:none}
+.flash{position:absolute; inset:0; border-radius:6cqw; background:rgba(238,244,252,.92); opacity:0; z-index:5; pointer-events:none}
 .on .flash{animation:soft .9s ease-out 3.1s both}
 @keyframes soft{0%{opacity:0} 25%{opacity:.75} 100%{opacity:0}}
-.hint{position:absolute; left:0; right:0; top:168cqw; text-align:center; font-family:var(--cap); font-size:2.8cqw; letter-spacing:.3em; text-transform:uppercase; color:#fff; opacity:0}
+.hint{position:absolute; left:0; right:0; top:156cqw; text-align:center; font-family:var(--cap); font-size:2.8cqw; letter-spacing:.3em; text-transform:uppercase; color:#fff; opacity:0}
 .on .hint{animation:inOut 1.9s ease-out 1.2s both}
 
 /* E: end card */
-#sE{background:var(--ivory)}
-.seal{position:absolute; left:50%; top:20cqw; width:24cqw; height:24cqw; margin-left:-12cqw; border-radius:50%; object-fit:cover; box-shadow:0 0 0 .5cqw var(--gold), 0 2cqw 5cqw rgba(90,19,40,.25); opacity:0}
+#sE{background:var(--ice)}
+.seal{position:absolute; left:50%; top:20cqw; width:24cqw; height:24cqw; margin-left:-12cqw; border-radius:50%; object-fit:cover; box-shadow:0 0 0 .5cqw var(--bronze), 0 2cqw 5cqw rgba(43,61,94,.25); opacity:0}
 .on .seal{animation:fadeUp .9s ease-out .3s both}
-.kick{position:absolute; left:0; right:0; text-align:center; font-family:var(--cap); font-size:3.1cqw; letter-spacing:.34em; text-transform:uppercase; color:var(--gold); opacity:0}
+.kick{position:absolute; left:0; right:0; text-align:center; font-family:var(--cap); font-size:3.1cqw; letter-spacing:.3em; text-transform:uppercase; color:var(--bronze); opacity:0}
 .on .kick{animation:fadeUp .8s ease-out var(--d) both}
 #sE .cp{font-size:11.2cqw; line-height:1.04}
-.rule{position:absolute; left:50%; top:106cqw; width:16cqw; margin-left:-8cqw; height:.3cqw; background:var(--gold); opacity:0}
+.rule{position:absolute; left:50%; top:108cqw; width:16cqw; margin-left:-8cqw; height:.3cqw; background:var(--bronze); opacity:0}
 .on .rule{animation:fadeUp .8s ease-out 1.8s both}
-.fine{position:absolute; left:0; right:0; text-align:center; font-size:3.4cqw; letter-spacing:.06em; color:#7a5560; opacity:0}
+.fine{position:absolute; left:0; right:0; text-align:center; font-size:3.5cqw; letter-spacing:.05em; color:var(--soft); opacity:0}
 .on .fine{animation:fadeUp .8s ease-out var(--d) both}
-.dots{position:absolute; left:0; right:0; top:128cqw; display:flex; justify-content:center; gap:3cqw; opacity:0}
-.on .dots{animation:fadeUp .8s ease-out 2.7s both}
-.dots i{width:4.4cqw; height:4.4cqw; border-radius:50%; box-shadow:0 0 0 .3cqw var(--gold)}
 .cta{position:absolute; left:0; right:0; text-align:center; opacity:0}
-.cta.c1{top:144cqw; font-family:var(--cap); font-size:3.8cqw; letter-spacing:.32em; text-transform:uppercase; color:var(--maroon)}
-.cta.c2{top:155cqw; font-size:3.3cqw; letter-spacing:.08em; color:#7a5560}
-.cta.c2 b{font-weight:600; color:var(--gold)}
+.cta.c1{top:138cqw; font-family:var(--cap); font-size:3.8cqw; letter-spacing:.32em; text-transform:uppercase; color:var(--navy)}
+.cta.c2{top:149cqw; font-size:3.3cqw; letter-spacing:.08em; color:var(--soft)}
+.cta.c2 b{font-weight:600; color:var(--bronze)}
 .on .cta{animation:fadeUp .8s ease-out var(--d) both}
 
 /* page chrome */
@@ -147,42 +146,41 @@ body{
   <!-- P: the invitation -->
   <section class="scene" id="sB">
     <div class="bd" aria-hidden="true">
-      <img src="assets/wd-envelope.jpg" alt="" style="--d:.9s;--len:3.6s">
-      <img src="assets/wd-hero.jpg" alt="" style="--d:3.3s;--len:3.7s">
-      <img src="assets/wd-families.jpg" alt="" style="--d:6.5s;--len:3.6s">
-      <img src="assets/wd-date.jpg" alt="" style="--d:9.7s;--len:3.6s">
-      <img class="last" src="assets/wd-events.jpg" alt="" style="--d:12.9s">
+      <img src="assets/rw-envelope.jpg" alt="" style="--d:.9s;--len:3.6s">
+        <img src="assets/rw-names.jpg" alt="" style="--d:3.3s;--len:3.7s">
+        <img src="assets/rw-ganesh.jpg" alt="" style="--d:6.5s;--len:3.6s">
+        <img src="assets/rw-events.jpg" alt="" style="--d:9.7s;--len:3.6s">
+        <img class="last" src="assets/rw-venue.jpg" alt="" style="--d:12.9s">
     </div>
     <div class="shade"></div>
     <div class="cp w t" style="top:13cqw;--d:.3s;--len:3s">So they sent<br>an <b>invitation</b>.</div>
     <div class="phone" aria-hidden="true">
       <div class="pill"></div>
       <div class="screen">
-        <img src="assets/wd-envelope.jpg" alt="" style="--d:.9s;--len:3.6s">
-        <img src="assets/wd-hero.jpg" alt="" style="--d:3.3s;--len:3.7s">
-        <img src="assets/wd-families.jpg" alt="" style="--d:6.5s;--len:3.6s">
-        <img src="assets/wd-date.jpg" alt="" style="--d:9.7s;--len:3.6s">
-        <img class="last" src="assets/wd-events.jpg" alt="" style="--d:12.9s">
+        <img src="assets/rw-envelope.jpg" alt="" style="--d:.9s;--len:3.6s">
+        <img src="assets/rw-names.jpg" alt="" style="--d:3.3s;--len:3.7s">
+        <img src="assets/rw-ganesh.jpg" alt="" style="--d:6.5s;--len:3.6s">
+        <img src="assets/rw-events.jpg" alt="" style="--d:9.7s;--len:3.6s">
+        <img class="last" src="assets/rw-venue.jpg" alt="" style="--d:12.9s">
         <i class="rip"></i>
       </div>
       <div class="flash"></div>
     </div>
     <div class="hint">Tap the seal to open</div>
-    <div class="cp w t" style="top:13cqw;--d:3.6s;--len:2.9s">Their names,<br>in <b>gold</b>.</div>
-    <div class="cp w t" style="top:13cqw;--d:6.8s;--len:2.9s">Blessed by<br><b>both families</b>.</div>
-    <div class="cp w t" style="top:13cqw;--d:10s;--len:2.9s">A live countdown<br>to the <b>big day</b>.</div>
-    <div class="cp w t" style="top:13cqw;--d:13.2s;--len:2.6s">Every ceremony,<br>every <b>detail</b>.</div>
+    <div class="cp w t" style="top:13cqw;--d:3.6s;--len:2.9s">Their names,<br>in <b>bloom</b>.</div>
+    <div class="cp w t" style="top:13cqw;--d:6.8s;--len:2.9s">Begun with<br><b>blessings</b>.</div>
+    <div class="cp w t" style="top:13cqw;--d:10s;--len:2.9s">Every celebration,<br><b>planned</b>.</div>
+    <div class="cp w t" style="top:13cqw;--d:13.2s;--len:2.6s">And the venue,<br>one <b>tap</b> away.</div>
   </section>
 
   <!-- E: end card -->
   <section class="scene" id="sE">
-    <img class="seal" src="assets/wd-seal.jpg" alt="">
-    <div class="kick" style="top:50cqw;--d:.8s">Wedding Invitation Website</div>
+    <img class="seal" src="assets/rw-seal.jpg" alt="">
+    <div class="kick" style="top:50cqw;--d:.8s">Royal Wedding Invitation</div>
     <div class="cp s" style="top:60cqw;--d:1.2s">Your wedding,<br>opened like a<br>sealed envelope.</div>
     <div class="rule"></div>
-    <div class="fine" style="top:112cqw;--d:2.1s">Hindu &middot; Sikh &middot; Muslim &middot; Christian</div>
-    <div class="fine" style="top:118cqw;--d:2.3s">Photos &middot; Countdown &middot; Map &middot; Calendar</div>
-    <div class="dots"><i style="background:#7a1d38"></i><i style="background:#e9a7b4"></i><i style="background:#0f5c4a"></i><i style="background:#f1e8d6"></i></div>
+    <div class="fine" style="top:113cqw;--d:2.1s">Ganesh ji blessing &middot; Families &middot; Events</div>
+    <div class="fine" style="top:120cqw;--d:2.3s">Venue map &middot; Dress code &middot; Share on WhatsApp</div>
     <div class="cta c1" style="--d:3.2s">Link in bio</div>
     <div class="cta c2" style="--d:3.8s">made with <b>iloveeefriez</b></div>
   </section>
